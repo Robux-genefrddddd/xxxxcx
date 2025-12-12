@@ -24,10 +24,32 @@ interface DashboardSidebarProps {
 
 const getNavItems = (userRole?: UserRole) => {
   const items = [
-    { id: "files", label: "Files", icon: null, imageUrl: "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label" },
-    { id: "shared", label: "Shared", icon: null, imageUrl: "https://cdn-icons-png.flaticon.com/512/666/666175.png" },
-    { id: "users", label: "Manage Users", icon: null, imageUrl: "https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png" },
-    { id: "theme", label: "Theme", icon: null, imageUrl: "https://cdn-icons-png.flaticon.com/512/3159/3159205.png" },
+    {
+      id: "files",
+      label: "Files",
+      icon: null,
+      imageUrl:
+        "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label",
+    },
+    {
+      id: "shared",
+      label: "Shared",
+      icon: null,
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/666/666175.png",
+    },
+    {
+      id: "users",
+      label: "Manage Users",
+      icon: null,
+      imageUrl:
+        "https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png",
+    },
+    {
+      id: "theme",
+      label: "Theme",
+      icon: null,
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/3159/3159205.png",
+    },
   ];
 
   if (userRole && canAccessAdmin(userRole)) {
@@ -128,11 +150,12 @@ export function DashboardSidebar({
                   alt={item.label}
                   className="w-4 h-4 object-contain"
                   style={{
-                    filter: item.id === "files"
-                      ? "none"
-                      : isActive
-                        ? "brightness(1) invert(1)"
-                        : "brightness(1.5) invert(1) opacity(0.9)",
+                    filter:
+                      item.id === "files"
+                        ? "none"
+                        : isActive
+                          ? "brightness(1) invert(1)"
+                          : "brightness(1.5) invert(1) opacity(0.9)",
                   }}
                 />
               ) : (

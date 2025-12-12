@@ -67,7 +67,10 @@ export function AdminPanel({ theme, userRole, userId }: AdminPanelProps) {
     <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center gap-2">
-        <div className="p-2 rounded-lg" style={{ backgroundColor: colors.accentLight }}>
+        <div
+          className="p-2 rounded-lg"
+          style={{ backgroundColor: colors.accentLight }}
+        >
           <Sparkles className="w-5 h-5" style={{ color: colors.accent }} />
         </div>
         <h2 className="text-2xl font-bold" style={{ color: colors.text }}>
@@ -104,14 +107,20 @@ export function AdminPanel({ theme, userRole, userId }: AdminPanelProps) {
               <div
                 className="transition-transform duration-300"
                 style={{
-                  transform: activeTab === tab.id ? "scale(1.2) rotate(10deg)" : "scale(1)",
+                  transform:
+                    activeTab === tab.id
+                      ? "scale(1.2) rotate(10deg)"
+                      : "scale(1)",
                 }}
               >
                 {tab.icon}
               </div>
               <span className="hidden sm:inline">{tab.label}</span>
               {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: colors.accent }}></div>
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-0.5"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
               )}
             </button>
           ))}

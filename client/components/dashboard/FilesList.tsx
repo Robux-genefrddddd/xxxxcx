@@ -36,7 +36,8 @@ interface FilesListProps {
 
 const getFileIcon = (filename: string) => {
   // Return file icon URL - using your custom file icon
-  const fileIconUrl = "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label";
+  const fileIconUrl =
+    "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label";
   return { icon: null, imageUrl: fileIconUrl, color: "#3B82F6" };
 };
 

@@ -155,7 +155,12 @@ export function AdminUserManagement({
 
   const getPlanInfo = (plan: string) => {
     const planMap = {
-      lifetime: { emoji: "♾️", label: "Lifetime", color: "#A855F7", icon: Award },
+      lifetime: {
+        emoji: "♾️",
+        label: "Lifetime",
+        color: "#A855F7",
+        icon: Award,
+      },
       premium: { emoji: "⭐", label: "Premium", color: "#22C55E", icon: Zap },
       free: { emoji: "🎯", label: "Free", color: colors.primary, icon: User },
     };
@@ -190,9 +195,7 @@ export function AdminUserManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }}>
-            No users found
-          </p>
+          <p style={{ color: colors.textSecondary }}>No users found</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -284,14 +287,22 @@ export function AdminUserManagement({
                   style={{ backgroundColor: colors.sidebar }}
                 >
                   <div className="flex justify-between items-center text-xs">
-                    <span style={{ color: colors.textSecondary }}>Storage Used</span>
-                    <span style={{ color: colors.text }} className="font-semibold">
+                    <span style={{ color: colors.textSecondary }}>
+                      Storage Used
+                    </span>
+                    <span
+                      style={{ color: colors.text }}
+                      className="font-semibold"
+                    >
                       {formatStorage(user.storageUsed)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-xs">
                     <span style={{ color: colors.textSecondary }}>Joined</span>
-                    <span style={{ color: colors.text }} className="font-semibold">
+                    <span
+                      style={{ color: colors.text }}
+                      className="font-semibold"
+                    >
                       {user.createdAt}
                     </span>
                   </div>
@@ -326,46 +337,48 @@ export function AdminUserManagement({
                 )}
 
                 {/* Actions */}
-                {canManageUsers(userRole) && canPerformCriticalActions(userRole) && !isCurrentUser && (
-                  <div>
-                    {deleteConfirm === user.id ? (
-                      <div className="flex gap-2">
+                {canManageUsers(userRole) &&
+                  canPerformCriticalActions(userRole) &&
+                  !isCurrentUser && (
+                    <div>
+                      {deleteConfirm === user.id ? (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => deleteUser(user.id)}
+                            className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all transform hover:scale-105"
+                            style={{
+                              backgroundColor: "rgba(239, 68, 68, 0.2)",
+                              color: "#EF4444",
+                            }}
+                          >
+                            ⚠️ Confirm
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirm(null)}
+                            className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
+                            style={{
+                              backgroundColor: colors.sidebar,
+                              color: colors.textSecondary,
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
                         <button
-                          onClick={() => deleteUser(user.id)}
-                          className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all transform hover:scale-105"
+                          onClick={() => setDeleteConfirm(user.id)}
+                          className="w-full px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 opacity-70 hover:opacity-100"
                           style={{
-                            backgroundColor: "rgba(239, 68, 68, 0.2)",
+                            backgroundColor: "rgba(239, 68, 68, 0.1)",
                             color: "#EF4444",
                           }}
                         >
-                          ⚠️ Confirm
+                          <Trash2 className="w-4 h-4" />
+                          Delete User
                         </button>
-                        <button
-                          onClick={() => setDeleteConfirm(null)}
-                          className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
-                          style={{
-                            backgroundColor: colors.sidebar,
-                            color: colors.textSecondary,
-                          }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => setDeleteConfirm(user.id)}
-                        className="w-full px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center justify-center gap-2 opacity-70 hover:opacity-100"
-                        style={{
-                          backgroundColor: "rgba(239, 68, 68, 0.1)",
-                          color: "#EF4444",
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        Delete User
-                      </button>
-                    )}
-                  </div>
-                )}
+                      )}
+                    </div>
+                  )}
               </div>
             );
           })}
@@ -381,7 +394,10 @@ export function AdminUserManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Total Users
           </p>
           <p
@@ -398,7 +414,10 @@ export function AdminUserManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Admins & Founders
           </p>
           <p
@@ -418,7 +437,10 @@ export function AdminUserManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Premium Users
           </p>
           <p className="text-4xl font-bold mt-3" style={{ color: "#22C55E" }}>

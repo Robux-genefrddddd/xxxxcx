@@ -202,7 +202,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
                     Total Users
                   </p>
                   <p
@@ -229,7 +232,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
                     Active Users
                   </p>
                   <p
@@ -246,8 +252,12 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
                   🟢
                 </div>
               </div>
-              <div style={{ color: colors.textSecondary }} className="text-xs mt-3">
-                {Math.round((stats.activeUsers / stats.totalUsers) * 100)}% of total
+              <div
+                style={{ color: colors.textSecondary }}
+                className="text-xs mt-3"
+              >
+                {Math.round((stats.activeUsers / stats.totalUsers) * 100)}% of
+                total
               </div>
             </div>
             <div
@@ -259,7 +269,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
                     Total Storage
                   </p>
                   <p
@@ -286,7 +299,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
                     Premium Users
                   </p>
                   <p
@@ -306,11 +322,19 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
                   ⭐
                 </div>
               </div>
-              <div style={{ color: colors.textSecondary }} className="text-xs mt-3">
-                {Math.round((stats.planDistribution.reduce(
-                  (acc, p) => acc + (p.name !== "Free" ? p.value : 0),
-                  0,
-                ) / stats.totalUsers) * 100)}% premium rate
+              <div
+                style={{ color: colors.textSecondary }}
+                className="text-xs mt-3"
+              >
+                {Math.round(
+                  (stats.planDistribution.reduce(
+                    (acc, p) => acc + (p.name !== "Free" ? p.value : 0),
+                    0,
+                  ) /
+                    stats.totalUsers) *
+                    100,
+                )}
+                % premium rate
               </div>
             </div>
           </div>
@@ -325,7 +349,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
                 borderColor: colors.border,
               }}
             >
-              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2" style={{ color: colors.text }}>
+              <h4
+                className="font-semibold text-lg mb-4 flex items-center gap-2"
+                style={{ color: colors.text }}
+              >
                 <span>📋</span> Plan Distribution
               </h4>
               <ResponsiveContainer width="100%" height={300}>
@@ -366,7 +393,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
                 borderColor: colors.border,
               }}
             >
-              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2" style={{ color: colors.text }}>
+              <h4
+                className="font-semibold text-lg mb-4 flex items-center gap-2"
+                style={{ color: colors.text }}
+              >
                 <span>🔐</span> Role Distribution
               </h4>
               <ResponsiveContainer width="100%" height={300}>
@@ -408,7 +438,10 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
               borderColor: colors.border,
             }}
           >
-            <h4 className="font-semibold text-lg mb-4 flex items-center gap-2" style={{ color: colors.text }}>
+            <h4
+              className="font-semibold text-lg mb-4 flex items-center gap-2"
+              style={{ color: colors.text }}
+            >
               <span>📈</span> Recent Activity (Last 7 Days)
             </h4>
             <ResponsiveContainer width="100%" height={300}>

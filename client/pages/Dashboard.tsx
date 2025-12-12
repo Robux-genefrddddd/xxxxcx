@@ -558,19 +558,22 @@ export default function Dashboard() {
             {activeTab === "users" && (
               <div className="animate-slideInUp">
                 <UserManagement
-                users={users}
-                theme={theme}
-                onAddUser={handleAddUser}
-                onDeleteUser={handleDeleteUser}
-                onUpdateUserRole={handleUpdateUserRole}
-              />
+                  users={users}
+                  theme={theme}
+                  onAddUser={handleAddUser}
+                  onDeleteUser={handleDeleteUser}
+                  onUpdateUserRole={handleUpdateUserRole}
+                />
               </div>
             )}
 
             {/* Theme Tab */}
             {activeTab === "theme" && (
               <div className="animate-slideInUp">
-                <ThemeSelector theme={theme} onThemeChange={handleThemeChange} />
+                <ThemeSelector
+                  theme={theme}
+                  onThemeChange={handleThemeChange}
+                />
               </div>
             )}
 
@@ -578,10 +581,10 @@ export default function Dashboard() {
             {activeTab === "admin" && (
               <div className="animate-slideInUp">
                 <AdminPanel
-                theme={theme}
-                userRole={userRole}
-                userId={userId || ""}
-              />
+                  theme={theme}
+                  userRole={userRole}
+                  userId={userId || ""}
+                />
               </div>
             )}
           </div>

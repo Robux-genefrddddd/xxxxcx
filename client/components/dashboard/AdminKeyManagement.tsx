@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { Plus, Copy, Trash2, Check, AlertTriangle, Lock, Crown, Zap } from "lucide-react";
+import {
+  Plus,
+  Copy,
+  Trash2,
+  Check,
+  AlertTriangle,
+  Lock,
+  Crown,
+  Zap,
+} from "lucide-react";
 import { getThemeColors } from "@/lib/theme-colors";
 import {
   collection,
@@ -323,8 +332,15 @@ export function AdminKeyManagement({
                       {getTypeIcon(key.type)}
                     </div>
                     <div>
-                      <div className="text-xs uppercase tracking-wide" style={{ color: colors.textSecondary }}>
-                        {key.type === "lifetime" ? "👑 Lifetime" : key.type === "yearly" ? "📊 Yearly" : "📅 Monthly"}
+                      <div
+                        className="text-xs uppercase tracking-wide"
+                        style={{ color: colors.textSecondary }}
+                      >
+                        {key.type === "lifetime"
+                          ? "👑 Lifetime"
+                          : key.type === "yearly"
+                            ? "📊 Yearly"
+                            : "📅 Monthly"}
                       </div>
                       <div
                         className="text-sm font-semibold mt-1"
@@ -374,7 +390,10 @@ export function AdminKeyManagement({
                     {copiedId === key.id ? (
                       <Check className="w-4 h-4" style={{ color: "#22C55E" }} />
                     ) : (
-                      <Copy className="w-4 h-4" style={{ color: colors.textSecondary }} />
+                      <Copy
+                        className="w-4 h-4"
+                        style={{ color: colors.textSecondary }}
+                      />
                     )}
                   </button>
                 </div>
@@ -469,7 +488,10 @@ export function AdminKeyManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Total Keys
           </p>
           <p
@@ -486,13 +508,13 @@ export function AdminKeyManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Used
           </p>
-          <p
-            className="text-3xl font-bold mt-2"
-            style={{ color: "#22C55E" }}
-          >
+          <p className="text-3xl font-bold mt-2" style={{ color: "#22C55E" }}>
             {keys.filter((k) => k.status === "used").length}
           </p>
         </div>
@@ -503,7 +525,10 @@ export function AdminKeyManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Unused
           </p>
           <p
@@ -520,13 +545,13 @@ export function AdminKeyManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }} className="text-xs uppercase tracking-wide">
+          <p
+            style={{ color: colors.textSecondary }}
+            className="text-xs uppercase tracking-wide"
+          >
             Lifetime Keys
           </p>
-          <p
-            className="text-3xl font-bold mt-2"
-            style={{ color: "#A855F7" }}
-          >
+          <p className="text-3xl font-bold mt-2" style={{ color: "#A855F7" }}>
             {keys.filter((k) => k.type === "lifetime").length}
           </p>
         </div>

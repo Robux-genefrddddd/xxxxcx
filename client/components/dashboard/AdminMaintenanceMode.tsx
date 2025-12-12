@@ -110,7 +110,10 @@ export function AdminMaintenanceMode({
             <Shield className="w-6 h-6" style={{ color: "#EF4444" }} />
           </div>
           <div>
-            <h3 className="font-semibold text-lg" style={{ color: colors.text }}>
+            <h3
+              className="font-semibold text-lg"
+              style={{ color: colors.text }}
+            >
               Access Denied
             </h3>
             <p style={{ color: colors.textSecondary }} className="text-sm mt-2">
@@ -149,7 +152,10 @@ export function AdminMaintenanceMode({
               <h4 className="font-semibold" style={{ color: colors.text }}>
                 Status
               </h4>
-              <p style={{ color: colors.textSecondary }} className="text-sm mt-1">
+              <p
+                style={{ color: colors.textSecondary }}
+                className="text-sm mt-1"
+              >
                 Enable maintenance mode
               </p>
             </div>
@@ -211,7 +217,10 @@ export function AdminMaintenanceMode({
                 backgroundColor: colors.accentLight,
               }}
             >
-              <AlertCircle className="w-5 h-5" style={{ color: colors.accent }} />
+              <AlertCircle
+                className="w-5 h-5"
+                style={{ color: colors.accent }}
+              />
             </div>
             <h4 className="font-semibold" style={{ color: colors.text }}>
               Warning Modal
@@ -321,7 +330,11 @@ export function AdminMaintenanceMode({
               ⚡ Maintenance Mode Active
             </p>
             <p style={{ color: colors.textSecondary }} className="text-sm mt-2">
-              Users will see the {config.mode === "warning" ? "warning modal" : "maintenance screen"}. Admins can press{" "}
+              Users will see the{" "}
+              {config.mode === "warning"
+                ? "warning modal"
+                : "maintenance screen"}
+              . Admins can press{" "}
               <kbd
                 style={{
                   backgroundColor: colors.sidebar,
@@ -364,11 +377,10 @@ export function AdminMaintenanceMode({
             >
               <AlertCircle className="w-6 h-6" style={{ color: "#EF4444" }} />
             </div>
-            <h3
-              className="font-bold text-lg mb-2"
-              style={{ color: "#EF4444" }}
-            >
-              {config.mode === "global" ? "Site Under Maintenance" : "Maintenance Notice"}
+            <h3 className="font-bold text-lg mb-2" style={{ color: "#EF4444" }}>
+              {config.mode === "global"
+                ? "Site Under Maintenance"
+                : "Maintenance Notice"}
             </h3>
             <p style={{ color: colors.text }} className="max-w-sm mx-auto">
               {config.message}
@@ -389,15 +401,19 @@ export function AdminMaintenanceMode({
           <div
             className="w-2 h-2 rounded-full"
             style={{
-              backgroundColor: config.enabled ? "#22C55E" : colors.textSecondary,
+              backgroundColor: config.enabled
+                ? "#22C55E"
+                : colors.textSecondary,
             }}
           />
           <span style={{ color: colors.text }} className="text-sm font-medium">
-            Status: {config.enabled ? "🟢 Maintenance Active" : "⚫ System Normal"}
+            Status:{" "}
+            {config.enabled ? "🟢 Maintenance Active" : "⚫ System Normal"}
           </span>
         </div>
         <span style={{ color: colors.textSecondary }} className="text-xs">
-          Mode: {config.mode === "global" ? "🚫 Global Block" : "⚠️ Warning Modal"}
+          Mode:{" "}
+          {config.mode === "global" ? "🚫 Global Block" : "⚠️ Warning Modal"}
         </span>
       </div>
     </div>
