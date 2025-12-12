@@ -6,12 +6,14 @@ interface FileUploadProps {
   onFileSelected: (file: File) => void;
   uploading: boolean;
   theme: string;
+  maxFileSize?: number; // in MB
 }
 
 export function FileUpload({
   onFileSelected,
   uploading,
   theme,
+  maxFileSize = 300,
 }: FileUploadProps) {
   const colors = getThemeColors(theme);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -117,7 +119,7 @@ export function FileUpload({
             color: colors.textSecondary,
           }}
         >
-          Maximum file size: 100 MB
+          Maximum file size: {maxFileSize} MB
         </p>
       </div>
     </div>

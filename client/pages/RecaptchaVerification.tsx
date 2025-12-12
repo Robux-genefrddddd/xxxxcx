@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Mail, CheckCircle, Shield } from "lucide-react";
+import { Mail, Shield } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 declare global {
@@ -241,12 +241,6 @@ export default function RecaptchaVerification() {
             </>
           ) : (
             <div className="text-center space-y-6 py-8">
-              <div
-                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
-                style={{ backgroundColor: "#1A2647" }}
-              >
-                <CheckCircle className="w-8 h-8 text-green-500" />
-              </div>
               <div>
                 <h2 className="text-2xl font-bold text-white mb-2">Welcome!</h2>
                 <p className="text-slate-400 text-sm">

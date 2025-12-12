@@ -1,0 +1,16 @@
+{
+  "framework": null,
+  "buildCommand": "pnpm build",
+  "outputDirectory": "dist/server",
+  "publicDirectory": "dist/spa",
+  "installCommand": "pnpm install",
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "server/**/*.mjs": {
+      "maxDuration": 30,
+      "memory": 1024
+    }
+  }
+}

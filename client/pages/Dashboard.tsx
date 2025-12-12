@@ -6,7 +6,7 @@ import { SharedFilesList } from "@/components/dashboard/SharedFilesList";
 import { UserManagement } from "@/components/dashboard/UserManagement";
 import { ThemeSelector } from "@/components/dashboard/ThemeSelector";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
-import { UploadModal, MAX_FILE_SIZE } from "@/components/dashboard/UploadModal";
+import { UploadModal } from "@/components/dashboard/UploadModal";
 import { PlanUpgradeModal } from "@/components/dashboard/PlanUpgradeModal";
 import { ShareFileModal } from "@/components/dashboard/ShareFileModal";
 import { DashboardStats } from "@/components/dashboard/DashboardStats";
@@ -190,6 +190,10 @@ export default function Dashboard() {
   const handleFileUpload = async (file: File) => {
     if (!file || !auth.currentUser) return;
 
+    // Determine max file size based on plan
+    const maxFileSize = userPlan.type === "premium" ? 800 : 300;
+    const maxFileSizeBytes = maxFileSize * 1024 * 1024;
+
     // Reset upload state
     setUploadFileName(file.name);
     setUploadProgress(0);
@@ -202,10 +206,10 @@ export default function Dashboard() {
       // Stage 1: Validate file
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Check file size (100MB limit)
-      if (file.size > MAX_FILE_SIZE) {
+      // Check file size based on plan
+      if (file.size > maxFileSizeBytes) {
         setUploadError(
-          `File size exceeds 100MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB`,
+          `File size exceeds ${maxFileSize}MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB`,
         );
         setUploadStage("error");
         setUploading(false);
@@ -514,12 +518,13 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto">
             {/* Files Tab */}
             {activeTab === "files" && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-slideInUp">
                 <DashboardStats files={files} theme={theme} plan={userPlan} />
                 <FileUpload
                   onFileSelected={handleFileUpload}
                   uploading={uploading}
                   theme={theme}
+                  maxFileSize={userPlan?.type === "premium" ? 800 : 300}
                 />
                 <FilesList
                   files={files}
@@ -536,7 +541,7 @@ export default function Dashboard() {
 
             {/* Shared Tab */}
             {activeTab === "shared" && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-slideInUp">
                 <SharedFilesList
                   files={files}
                   loading={loading}
@@ -551,27 +556,36 @@ export default function Dashboard() {
 
             {/* Users Tab */}
             {activeTab === "users" && (
-              <UserManagement
-                users={users}
-                theme={theme}
-                onAddUser={handleAddUser}
-                onDeleteUser={handleDeleteUser}
-                onUpdateUserRole={handleUpdateUserRole}
-              />
+              <div className="animate-slideInUp">
+                <UserManagement
+                  users={users}
+                  theme={theme}
+                  onAddUser={handleAddUser}
+                  onDeleteUser={handleDeleteUser}
+                  onUpdateUserRole={handleUpdateUserRole}
+                />
+              </div>
             )}
 
             {/* Theme Tab */}
             {activeTab === "theme" && (
-              <ThemeSelector theme={theme} onThemeChange={handleThemeChange} />
+              <div className="animate-slideInUp">
+                <ThemeSelector
+                  theme={theme}
+                  onThemeChange={handleThemeChange}
+                />
+              </div>
             )}
 
             {/* Admin Tab */}
             {activeTab === "admin" && (
-              <AdminPanel
-                theme={theme}
-                userRole={userRole}
-                userId={userId || ""}
-              />
+              <div className="animate-slideInUp">
+                <AdminPanel
+                  theme={theme}
+                  userRole={userRole}
+                  userId={userId || ""}
+                />
+              </div>
             )}
           </div>
         </div>

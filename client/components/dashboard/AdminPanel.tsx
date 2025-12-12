@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Key, Users, AlertCircle, BarChart3 } from "lucide-react";
+import { Key, Users, AlertCircle, BarChart3, Sparkles } from "lucide-react";
 import { getThemeColors } from "@/lib/theme-colors";
 import { AdminKeyManagement } from "./AdminKeyManagement";
 import { AdminUserManagement } from "./AdminUserManagement";
@@ -64,7 +64,20 @@ export function AdminPanel({ theme, userRole, userId }: AdminPanelProps) {
   const visibleTabs = adminTabs.filter((tab) => tab.visible);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="flex items-center gap-2">
+        <div
+          className="p-2 rounded-lg"
+          style={{ backgroundColor: colors.accentLight }}
+        >
+          <Sparkles className="w-5 h-5" style={{ color: colors.accent }} />
+        </div>
+        <h2 className="text-2xl font-bold" style={{ color: colors.text }}>
+          Admin Console
+        </h2>
+      </div>
+
       {/* Navigation Tabs */}
       <div
         className="border rounded-2xl overflow-hidden"
@@ -74,25 +87,41 @@ export function AdminPanel({ theme, userRole, userId }: AdminPanelProps) {
         }}
       >
         <div
-          className="flex gap-1 p-2"
+          className="flex gap-1 p-3 flex-wrap"
           style={{
             backgroundColor: colors.sidebar,
             borderBottomColor: colors.border,
           }}
         >
-          {visibleTabs.map((tab) => (
+          {visibleTabs.map((tab, idx) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-colors"
+              className="flex items-center gap-2 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-300 relative group"
               style={{
                 backgroundColor:
                   activeTab === tab.id ? colors.accent : "transparent",
                 color: activeTab === tab.id ? "#FFFFFF" : colors.textSecondary,
               }}
             >
-              {tab.icon}
+              <div
+                className="transition-transform duration-300"
+                style={{
+                  transform:
+                    activeTab === tab.id
+                      ? "scale(1.2) rotate(10deg)"
+                      : "scale(1)",
+                }}
+              >
+                {tab.icon}
+              </div>
               <span className="hidden sm:inline">{tab.label}</span>
+              {activeTab === tab.id && (
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-0.5"
+                  style={{ backgroundColor: colors.accent }}
+                ></div>
+              )}
             </button>
           ))}
         </div>

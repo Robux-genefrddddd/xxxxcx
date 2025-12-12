@@ -169,10 +169,15 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-bold" style={{ color: colors.text }}>
-        Global Statistics
-      </h3>
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-2xl font-bold" style={{ color: colors.text }}>
+          📊 Global Statistics
+        </h3>
+        <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
+          System-wide metrics and analytics dashboard
+        </p>
+      </div>
 
       {loading ? (
         <div className="p-8 text-center">
@@ -187,77 +192,150 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
       ) : (
         <>
           {/* Key Metrics */}
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div
-              className="p-4 rounded-xl border"
+              className="p-6 rounded-xl border transition-all hover:shadow-lg transform hover:scale-105 group"
               style={{
                 backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
-              <p style={{ color: colors.textSecondary }} className="text-sm">
-                Total Users
-              </p>
-              <p
-                className="text-2xl font-bold mt-2"
-                style={{ color: colors.accent }}
-              >
-                {stats.totalUsers}
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
+                    Total Users
+                  </p>
+                  <p
+                    className="text-4xl font-bold mt-3"
+                    style={{ color: colors.accent }}
+                  >
+                    {stats.totalUsers}
+                  </p>
+                </div>
+                <div
+                  className="p-3 rounded-lg text-2xl"
+                  style={{ backgroundColor: colors.accentLight }}
+                >
+                  👥
+                </div>
+              </div>
             </div>
             <div
-              className="p-4 rounded-xl border"
+              className="p-6 rounded-xl border transition-all hover:shadow-lg transform hover:scale-105 group"
               style={{
                 backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
-              <p style={{ color: colors.textSecondary }} className="text-sm">
-                Active Users
-              </p>
-              <p
-                className="text-2xl font-bold mt-2"
-                style={{ color: "#22C55E" }}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
+                    Active Users
+                  </p>
+                  <p
+                    className="text-4xl font-bold mt-3"
+                    style={{ color: "#22C55E" }}
+                  >
+                    {stats.activeUsers}
+                  </p>
+                </div>
+                <div
+                  className="p-3 rounded-lg text-2xl"
+                  style={{ backgroundColor: "rgba(34, 197, 94, 0.15)" }}
+                >
+                  🟢
+                </div>
+              </div>
+              <div
+                style={{ color: colors.textSecondary }}
+                className="text-xs mt-3"
               >
-                {stats.activeUsers}
-              </p>
+                {Math.round((stats.activeUsers / stats.totalUsers) * 100)}% of
+                total
+              </div>
             </div>
             <div
-              className="p-4 rounded-xl border"
+              className="p-6 rounded-xl border transition-all hover:shadow-lg transform hover:scale-105 group"
               style={{
                 backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
-              <p style={{ color: colors.textSecondary }} className="text-sm">
-                Total Storage
-              </p>
-              <p
-                className="text-2xl font-bold mt-2"
-                style={{ color: "#A855F7" }}
-              >
-                {formatStorage(stats.totalStorage)}
-              </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
+                    Total Storage
+                  </p>
+                  <p
+                    className="text-3xl font-bold mt-3"
+                    style={{ color: "#A855F7" }}
+                  >
+                    {formatStorage(stats.totalStorage)}
+                  </p>
+                </div>
+                <div
+                  className="p-3 rounded-lg text-2xl"
+                  style={{ backgroundColor: "rgba(168, 85, 247, 0.15)" }}
+                >
+                  💾
+                </div>
+              </div>
             </div>
             <div
-              className="p-4 rounded-xl border"
+              className="p-6 rounded-xl border transition-all hover:shadow-lg transform hover:scale-105 group"
               style={{
                 backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
-              <p style={{ color: colors.textSecondary }} className="text-sm">
-                Premium Users
-              </p>
-              <p
-                className="text-2xl font-bold mt-2"
-                style={{ color: "#F59E0B" }}
+              <div className="flex items-center justify-between">
+                <div>
+                  <p
+                    style={{ color: colors.textSecondary }}
+                    className="text-xs uppercase tracking-wide"
+                  >
+                    Premium Users
+                  </p>
+                  <p
+                    className="text-4xl font-bold mt-3"
+                    style={{ color: "#F59E0B" }}
+                  >
+                    {stats.planDistribution.reduce(
+                      (acc, p) => acc + (p.name !== "Free" ? p.value : 0),
+                      0,
+                    )}
+                  </p>
+                </div>
+                <div
+                  className="p-3 rounded-lg text-2xl"
+                  style={{ backgroundColor: "rgba(245, 158, 11, 0.15)" }}
+                >
+                  ⭐
+                </div>
+              </div>
+              <div
+                style={{ color: colors.textSecondary }}
+                className="text-xs mt-3"
               >
-                {stats.planDistribution.reduce(
-                  (acc, p) => acc + (p.name !== "Free" ? p.value : 0),
-                  0,
+                {Math.round(
+                  (stats.planDistribution.reduce(
+                    (acc, p) => acc + (p.name !== "Free" ? p.value : 0),
+                    0,
+                  ) /
+                    stats.totalUsers) *
+                    100,
                 )}
-              </p>
+                % premium rate
+              </div>
             </div>
           </div>
 
@@ -265,14 +343,17 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Plan Distribution Pie Chart */}
             <div
-              className="p-4 rounded-xl border"
+              className="p-6 rounded-xl border transition-all hover:shadow-lg"
               style={{
                 backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
-              <h4 className="font-semibold mb-4" style={{ color: colors.text }}>
-                Plan Distribution
+              <h4
+                className="font-semibold text-lg mb-4 flex items-center gap-2"
+                style={{ color: colors.text }}
+              >
+                <span>📋</span> Plan Distribution
               </h4>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -306,14 +387,17 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
 
             {/* Role Distribution Pie Chart */}
             <div
-              className="p-4 rounded-xl border"
+              className="p-6 rounded-xl border transition-all hover:shadow-lg"
               style={{
                 backgroundColor: colors.card,
                 borderColor: colors.border,
               }}
             >
-              <h4 className="font-semibold mb-4" style={{ color: colors.text }}>
-                Role Distribution
+              <h4
+                className="font-semibold text-lg mb-4 flex items-center gap-2"
+                style={{ color: colors.text }}
+              >
+                <span>🔐</span> Role Distribution
               </h4>
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
@@ -348,14 +432,17 @@ export function AdminGlobalStats({ theme, userRole }: AdminGlobalStatsProps) {
 
           {/* Recent Activity Bar Chart */}
           <div
-            className="p-4 rounded-lg border"
+            className="p-6 rounded-xl border transition-all hover:shadow-lg"
             style={{
               backgroundColor: colors.card,
               borderColor: colors.border,
             }}
           >
-            <h4 className="font-semibold mb-4" style={{ color: colors.text }}>
-              Recent Activity (Last 7 Days)
+            <h4
+              className="font-semibold text-lg mb-4 flex items-center gap-2"
+              style={{ color: colors.text }}
+            >
+              <span>📈</span> Recent Activity (Last 7 Days)
             </h4>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart

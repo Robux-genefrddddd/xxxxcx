@@ -35,17 +35,10 @@ interface FilesListProps {
 }
 
 const getFileIcon = (filename: string) => {
-  const ext = filename.split(".").pop()?.toLowerCase() || "";
-  const docs = ["pdf", "doc", "docx", "txt", "xlsx", "xls", "ppt", "pptx"];
-  const imgs = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp"];
-  const vids = ["mp4", "avi", "mkv", "mov", "wmv", "flv"];
-  const archs = ["zip", "rar", "7z", "tar", "gz"];
-
-  if (docs.includes(ext)) return { icon: FileText, color: "#3B82F6" };
-  if (imgs.includes(ext)) return { icon: Image, color: "#8B5CF6" };
-  if (vids.includes(ext)) return { icon: Video, color: "#EC4899" };
-  if (archs.includes(ext)) return { icon: Archive, color: "#F59E0B" };
-  return { icon: File, color: "#06B6D4" };
+  // Return file icon URL - using your custom file icon
+  const fileIconUrl =
+    "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label";
+  return { icon: null, imageUrl: fileIconUrl, color: "#3B82F6" };
 };
 
 export function FilesList({

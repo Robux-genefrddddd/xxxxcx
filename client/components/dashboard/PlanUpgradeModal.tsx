@@ -80,7 +80,7 @@ export function PlanUpgradeModal({
       if (userPlanDoc.exists()) {
         await updateDoc(userPlanRef, {
           type: "premium",
-          storageLimit: 999 * 1024 * 1024 * 1024, // 999TB - effectively unlimited
+          storageLimit: Infinity, // Unlimited storage
           validatedAt: new Date().toISOString(),
         });
       }
@@ -94,7 +94,7 @@ export function PlanUpgradeModal({
 
       onUpgradePlan({
         type: "premium",
-        storageLimit: 999 * 1024 * 1024 * 1024, // 999TB - effectively unlimited
+        storageLimit: Infinity, // Unlimited storage
         storageUsed: 0,
         validatedAt: new Date().toISOString(),
       });

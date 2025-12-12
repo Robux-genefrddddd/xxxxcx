@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Files, Users, Palette, LogOut, Shield, Share2 } from "lucide-react";
+import { LogOut, Shield } from "lucide-react";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { getThemeColors } from "@/lib/theme-colors";
@@ -24,10 +24,32 @@ interface DashboardSidebarProps {
 
 const getNavItems = (userRole?: UserRole) => {
   const items = [
-    { id: "files", label: "Files", icon: Files },
-    { id: "shared", label: "Shared", icon: Share2 },
-    { id: "users", label: "Manage Users", icon: Users },
-    { id: "theme", label: "Theme", icon: Palette },
+    {
+      id: "files",
+      label: "Files",
+      icon: null,
+      imageUrl:
+        "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label",
+    },
+    {
+      id: "shared",
+      label: "Shared",
+      icon: null,
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/666/666175.png",
+    },
+    {
+      id: "users",
+      label: "Manage Users",
+      icon: null,
+      imageUrl:
+        "https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png",
+    },
+    {
+      id: "theme",
+      label: "Theme",
+      icon: null,
+      imageUrl: "https://cdn-icons-png.flaticon.com/512/3159/3159205.png",
+    },
   ];
 
   if (userRole && canAccessAdmin(userRole)) {
@@ -54,9 +76,9 @@ export function DashboardSidebar({
     : 0;
 
   const getStorageLimitDisplay = () => {
-    if (!userPlan) return "100 MB";
+    if (!userPlan) return "1 GB";
+    if (userPlan.storageLimit === Infinity) return "Unlimited";
     const limitTB = userPlan.storageLimit / (1024 * 1024 * 1024 * 1024);
-    if (limitTB >= 999) return "Unlimited";
     if (limitTB >= 1) return `${limitTB.toFixed(0)} T`;
     const limitGB = userPlan.storageLimit / (1024 * 1024 * 1024);
     if (limitGB >= 1) return `${limitGB.toFixed(0)} GB`;
@@ -122,7 +144,23 @@ export function DashboardSidebar({
                   : colors.textSecondary,
               }}
             >
-              <Icon className="w-4 h-4" />
+              {item.imageUrl ? (
+                <img
+                  src={item.imageUrl}
+                  alt={item.label}
+                  className="w-4 h-4 object-contain"
+                  style={{
+                    filter:
+                      item.id === "files"
+                        ? "none"
+                        : isActive
+                          ? "brightness(1) invert(1)"
+                          : "brightness(1.5) invert(1) opacity(0.9)",
+                  }}
+                />
+              ) : (
+                <Icon className="w-4 h-4" />
+              )}
               <span>{item.label}</span>
             </button>
           );
@@ -136,11 +174,18 @@ export function DashboardSidebar({
       >
         {/* User Card */}
         <div className="flex items-start gap-3">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets%2F91e2732f1c03487e879c66ee97e72712%2Fee08390eccc04e8dbea3ce5415d97e92?format=webp&width=800"
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full flex-shrink-0"
-          />
+          <div
+            className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
+            style={{
+              backgroundColor: "#FFFFFF",
+            }}
+          >
+            <img
+              src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
+              alt="User Avatar"
+              className="w-6 h-6 object-contain"
+            />
+          </div>
           <div className="flex-1 min-w-0">
             <p
               className="text-xs font-semibold truncate"
