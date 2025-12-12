@@ -154,8 +154,7 @@ export function DashboardSidebar({
           <div
             className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
             style={{
-              backgroundColor: colors.primary,
-              opacity: 0.8,
+              backgroundColor: "#FFFFFF",
             }}
           >
             <img
