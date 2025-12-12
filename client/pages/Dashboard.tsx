@@ -514,7 +514,7 @@ export default function Dashboard() {
           <div className="max-w-7xl mx-auto">
             {/* Files Tab */}
             {activeTab === "files" && (
-              <div className="space-y-6">
+              <div className="space-y-6 animate-slideInUp">
                 <DashboardStats files={files} theme={theme} plan={userPlan} />
                 <FileUpload
                   onFileSelected={handleFileUpload}
