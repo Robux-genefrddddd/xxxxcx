@@ -181,7 +181,7 @@ export function AdminKeyManagement({
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h3 className="text-xl font-bold" style={{ color: colors.text }}>
-            🔐 Premium Keys
+            Premium Keys
           </h3>
           <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
             Manage license keys for premium access
@@ -212,7 +212,7 @@ export function AdminKeyManagement({
           }}
         >
           <h4 className="font-semibold text-lg" style={{ color: colors.text }}>
-            ✨ Generate New Premium Key
+            Generate New Premium Key
           </h4>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -238,9 +238,9 @@ export function AdminKeyManagement({
                   color: colors.text,
                 }}
               >
-                <option value="monthly">📅 Monthly</option>
-                <option value="yearly">📊 Yearly</option>
-                <option value="lifetime">👑 Lifetime</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+                <option value="lifetime">Lifetime</option>
               </select>
             </div>
 
@@ -280,7 +280,7 @@ export function AdminKeyManagement({
               color: "#FFFFFF",
             }}
           >
-            {generatingKey ? "⏳ Generating..." : "🚀 Create Key"}
+            {generatingKey ? "Generating..." : "Create Key"}
           </button>
         </div>
       )}
@@ -337,10 +337,10 @@ export function AdminKeyManagement({
                         style={{ color: colors.textSecondary }}
                       >
                         {key.type === "lifetime"
-                          ? "👑 Lifetime"
+                          ? "Lifetime"
                           : key.type === "yearly"
-                            ? "📊 Yearly"
-                            : "📅 Monthly"}
+                            ? "Yearly"
+                            : "Monthly"}
                       </div>
                       <div
                         className="text-sm font-semibold mt-1"
@@ -437,15 +437,15 @@ export function AdminKeyManagement({
                     {deleteConfirm === key.id ? (
                       <div className="flex gap-2">
                         <button
-                          onClick={() => deleteKey(key.id, key)}
-                          className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all transform hover:scale-105"
-                          style={{
-                            backgroundColor: "rgba(239, 68, 68, 0.2)",
-                            color: "#EF4444",
-                          }}
-                        >
-                          ⚠️ Confirm Delete
-                        </button>
+                        onClick={() => deleteKey(key.id, key)}
+                        className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all transform hover:scale-105"
+                        style={{
+                          backgroundColor: "rgba(239, 68, 68, 0.2)",
+                          color: "#EF4444",
+                        }}
+                      >
+                        Confirm Delete
+                      </button>
                         <button
                           onClick={() => setDeleteConfirm(null)}
                           className="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all"
