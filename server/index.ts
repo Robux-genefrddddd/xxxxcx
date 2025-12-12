@@ -75,8 +75,7 @@ export function createServer() {
   app.use(express.json({ limit: "10kb" })); // Limit request size to prevent large payload attacks
   app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
-  // Apply rate limiting
-  app.use(limiter);
+  // Input validation middleware (apply globally)
   app.use(validateInput);
 
   // Example API routes
