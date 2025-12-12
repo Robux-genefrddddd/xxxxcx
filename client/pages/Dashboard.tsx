@@ -520,6 +520,7 @@ export default function Dashboard() {
                   onFileSelected={handleFileUpload}
                   uploading={uploading}
                   theme={theme}
+                  maxFileSize={userPlan?.type === "premium" ? 800 : 300}
                 />
                 <FilesList
                   files={files}
