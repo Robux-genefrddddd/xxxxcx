@@ -5,30 +5,36 @@ import rateLimit from "express-rate-limit";
 import { handleDemo } from "./routes/demo";
 
 // Rate limiting configuration for DDoS protection
+// Disable in development for easier testing
+const isProduction = process.env.NODE_ENV === "production";
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: isProduction ? 100 : 1000, // More permissive in development
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => !isProduction, // Skip rate limiting in development
 });
 
 // Stricter rate limiting for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // limit each IP to 5 requests per windowMs
+  max: isProduction ? 5 : 100, // More permissive in development
   message: "Too many authentication attempts, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => !isProduction,
 });
 
 // API rate limiting (stricter for premium key operations)
 const apiLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 30, // limit each IP to 30 requests per minute
+  max: isProduction ? 30 : 1000, // More permissive in development
   message: "Too many API requests, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
+  skip: () => !isProduction,
 });
 
 // Input validation middleware to prevent injection attacks
