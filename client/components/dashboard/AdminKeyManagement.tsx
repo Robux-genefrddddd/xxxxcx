@@ -266,13 +266,15 @@ export function AdminKeyManagement({
               <input
                 type="number"
                 value={formData.maxEmojis}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 1000;
                   setFormData({
                     ...formData,
-                    maxEmojis: parseInt(e.target.value) || 0,
-                  })
-                }
+                    maxEmojis: Math.max(1, Math.min(value, 1000000)),
+                  });
+                }}
                 min="1"
+                max="1000000"
                 className="w-full px-4 py-2.5 rounded-lg border text-sm focus:outline-none transition-all"
                 style={{
                   backgroundColor: colors.sidebar,
