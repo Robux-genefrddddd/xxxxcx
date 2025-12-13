@@ -8,8 +8,9 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { ref, getDownloadURL } from "firebase/storage";
 
 interface SharedFile {
   id: string;
