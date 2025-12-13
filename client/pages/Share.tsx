@@ -114,7 +114,6 @@ export default function Share() {
         a.href = downloadUrl;
         a.download = file.name;
         a.style.display = "none";
-        a.target = "_blank";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
