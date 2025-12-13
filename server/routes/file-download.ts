@@ -10,9 +10,9 @@ router.post("/download", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "Storage path is required" });
     }
 
-    const firebaseStorageBucket = "keysystem-d0b86-8df89.firebasestorage.app";
+    const firebaseStorageBucket = "keysystem-d0b86-8df89";
     const encodedPath = encodeURIComponent(storagePath);
-    const fileUrl = `https://${firebaseStorageBucket}/v0/b/${firebaseStorageBucket}/o/${encodedPath}?alt=media`;
+    const fileUrl = `https://firebasestorage.googleapis.com/v0/b/${firebaseStorageBucket}/o/${encodedPath}?alt=media`;
 
     const MAX_RETRIES = 3;
     const INITIAL_DELAY = 1000;
