@@ -70,7 +70,6 @@ export function FilesList({
       link.href = downloadUrl;
       link.download = file.name || "download";
       link.style.display = "none";
-      link.target = "_blank";
 
       document.body.appendChild(link);
       link.click();
