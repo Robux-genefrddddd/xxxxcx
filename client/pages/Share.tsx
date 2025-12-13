@@ -106,9 +106,19 @@ export default function Share() {
       const fileData = fileSnap.data();
 
       if (fileData?.storagePath) {
-        const storageRef = ref(storage, fileData.storagePath);
-        const bytes = await getBytes(storageRef);
-        const blob = new Blob([bytes]);
+        const response = await fetch("/api/files/download", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ storagePath: fileData.storagePath }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to download file");
+        }
+
+        const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
