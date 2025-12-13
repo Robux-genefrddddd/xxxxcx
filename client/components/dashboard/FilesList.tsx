@@ -60,86 +60,39 @@ export function FilesList({
 
     setDownloadingId(file.id);
 
-    // Retry configuration
-    const MAX_RETRIES = 3;
-    const INITIAL_DELAY = 1000; // 1 second
+    try {
+      const response = await fetch("/api/files/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ storagePath: file.storagePath }),
+      });
 
-    const downloadWithRetry = async (retryCount = 0): Promise<Uint8Array> => {
-      try {
-        const fileRef = ref(storage, file.storagePath);
-
-        // Configure timeout - increase max time for larger files
-        const maxDownloadBytes = 500 * 1024 * 1024; // 500MB max
-        const bytes = await getBytes(fileRef, maxDownloadBytes);
-
-        return bytes;
-      } catch (storageError) {
-        const errorMsg =
-          storageError instanceof Error
-            ? storageError.message
-            : String(storageError);
-        console.error(`Download attempt ${retryCount + 1} failed:`, errorMsg);
-
-        // Check if we should retry
-        if (
-          (errorMsg.includes("retry-limit-exceeded") ||
-            errorMsg.includes("network") ||
-            errorMsg.includes("timeout")) &&
-          retryCount < MAX_RETRIES
-        ) {
-          // Exponential backoff: 1s, 2s, 4s
-          const delay = INITIAL_DELAY * Math.pow(2, retryCount);
-          console.log(
-            `Retrying in ${delay}ms (attempt ${retryCount + 1}/${MAX_RETRIES})`,
-          );
-
-          await new Promise((resolve) => setTimeout(resolve, delay));
-          return downloadWithRetry(retryCount + 1);
-        }
-
-        // Check for common Firebase Storage errors
-        if (
-          errorMsg.includes("auth/unauthenticated") ||
-          errorMsg.includes("permission-denied")
-        ) {
+      if (!response.ok) {
+        if (response.status === 401) {
           throw new Error("Access denied. Please try logging in again.");
-        } else if (errorMsg.includes("storage/object-not-found")) {
+        } else if (response.status === 403) {
+          throw new Error("You don't have permission to download this file.");
+        } else if (response.status === 404) {
           throw new Error(
             "File not found in storage. It may have been deleted.",
           );
-        } else if (errorMsg.includes("retry-limit-exceeded")) {
-          throw new Error(
-            "Download timed out due to slow connection. Please check your internet and try again.",
-          );
-        } else if (errorMsg.includes("network")) {
-          throw new Error(
-            "Network error. Please check your connection and try again.",
-          );
         } else {
-          throw new Error(`Storage error: ${errorMsg}`);
+          throw new Error("Failed to download file. Please try again.");
         }
       }
-    };
 
-    try {
-      // Download with retry logic
-      const bytes = await downloadWithRetry();
-
-      // Create blob with proper type
-      const blob = new Blob([bytes], { type: "application/octet-stream" });
-
-      // Create download link
+      const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
       link.download = file.name || "download";
       link.style.display = "none";
 
-      // Trigger download
       document.body.appendChild(link);
       link.click();
 
-      // Cleanup
       setTimeout(() => {
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
