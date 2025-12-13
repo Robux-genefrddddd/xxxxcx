@@ -91,9 +91,6 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
-  // File download routes
-  app.use("/api/files", fileDownloadRouter);
-
   // Note: In development, Vite's dev server handles static files and SPA routing.
   // In production, node-build.ts handles static files and SPA fallback.
   // We only return API 404s here for actual API requests.
