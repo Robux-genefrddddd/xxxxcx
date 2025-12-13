@@ -72,8 +72,22 @@ export function FilesList({
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to download file");
+        let errorMessage = "Failed to download file";
+        const contentType = response.headers.get("content-type");
+
+        try {
+          if (contentType?.includes("application/json")) {
+            const error = await response.json();
+            errorMessage = error.error || errorMessage;
+          } else {
+            const text = await response.text();
+            errorMessage = text.slice(0, 100) || errorMessage;
+          }
+        } catch {
+          errorMessage = `Server error (${response.status})`;
+        }
+
+        throw new Error(errorMessage);
       }
 
       const blob = await response.blob();
