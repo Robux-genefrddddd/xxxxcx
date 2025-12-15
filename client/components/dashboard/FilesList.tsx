@@ -85,9 +85,7 @@ export function FilesList({
           if (xhr.status === 200) {
             resolve(xhr.response);
           } else {
-            reject(
-              new Error(`Download failed with status ${xhr.status}`),
-            );
+            reject(new Error(`Download failed with status ${xhr.status}`));
           }
         };
         xhr.onerror = () => reject(new Error("Network request failed"));
