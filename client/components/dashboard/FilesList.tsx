@@ -195,7 +195,10 @@ export function FilesList({
                 type="checkbox"
                 checked={selectedFileIds.size === files.length && files.length > 0}
                 onChange={toggleSelectAll}
-                className="w-4 h-4 cursor-pointer"
+                className="w-4 h-4 cursor-pointer rounded"
+                style={{
+                  accentColor: colors.primary,
+                }}
               />
             )}
             <h2
