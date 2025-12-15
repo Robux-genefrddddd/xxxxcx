@@ -330,7 +330,10 @@ export function FilesList({
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleFileSelection(file.id)}
-                        className="w-4 h-4 cursor-pointer flex-shrink-0"
+                        className="w-4 h-4 cursor-pointer flex-shrink-0 rounded"
+                        style={{
+                          accentColor: colors.primary,
+                        }}
                       />
                     )}
                     <div
