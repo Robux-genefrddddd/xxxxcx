@@ -75,37 +75,25 @@ export function FilesList({
     setDownloadingId(file.id);
 
     try {
-      const response = await fetch("/api/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          storagePath: file.storagePath,
-          fileName: file.name,
-        }),
+      const storageRef = ref(storage, file.storagePath);
+      const downloadUrl = await getDownloadURL(storageRef);
+
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          } else {
+            reject(new Error(`Download failed with status ${xhr.status}`));
+          }
+        };
+        xhr.onerror = () => reject(new Error("Network request failed"));
+        xhr.onabort = () => reject(new Error("Download cancelled"));
+        xhr.open("GET", downloadUrl);
+        xhr.send();
       });
 
-      if (!response.ok) {
-        let errorMessage = "Failed to download file";
-        const contentType = response.headers.get("content-type");
-
-        try {
-          if (contentType?.includes("application/json")) {
-            const error = await response.json();
-            errorMessage = error.error || errorMessage;
-          } else {
-            const text = await response.text();
-            errorMessage = text.slice(0, 100) || errorMessage;
-          }
-        } catch {
-          errorMessage = `Server error (${response.status})`;
-        }
-
-        throw new Error(errorMessage);
-      }
-
-      const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
 
       const link = document.createElement("a");
