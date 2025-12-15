@@ -1,4 +1,3 @@
-import { IncomingMessage, ServerResponse } from "http";
 import admin from "firebase-admin";
 
 // Initialize Firebase Admin SDK once
@@ -32,12 +31,27 @@ function initializeFirebase() {
   }
 }
 
-export default async function handler(
-  req: IncomingMessage & { body?: Record<string, unknown> },
-  res: ServerResponse,
-) {
+export default async function handler(req: any, res: any) {
+  // Set CORS headers
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-CSRF-Token,X-Requested-With,Accept,Accept-Version,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version",
+  );
+
+  if (req.method === "OPTIONS") {
+    res.status(200).end();
+    return;
+  }
+
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    res.status(405).json({ error: "Method not allowed" });
+    return;
   }
 
   try {
@@ -45,16 +59,19 @@ export default async function handler(
 
     // Validate required fields
     if (!storagePath || typeof storagePath !== "string") {
-      return res.status(400).json({ error: "storagePath is required" });
+      res.status(400).json({ error: "storagePath is required" });
+      return;
     }
 
     if (!fileName || typeof fileName !== "string") {
-      return res.status(400).json({ error: "fileName is required" });
+      res.status(400).json({ error: "fileName is required" });
+      return;
     }
 
     // Security: Prevent path traversal
     if (storagePath.includes("..") || storagePath.startsWith("/")) {
-      return res.status(400).json({ error: "Invalid storagePath" });
+      res.status(400).json({ error: "Invalid storagePath" });
+      return;
     }
 
     // Initialize Firebase if not already done
@@ -73,12 +90,9 @@ export default async function handler(
       responseContentType: "application/octet-stream",
     });
 
-    return res.status(200).json({ signedUrl });
+    res.status(200).json({ signedUrl });
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error";
     console.error("Error generating signed URL:", error);
-
-    return res.status(500).json({ error: "Failed to generate signed URL" });
+    res.status(500).json({ error: "Failed to generate signed URL" });
   }
 }
