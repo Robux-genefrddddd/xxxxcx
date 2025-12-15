@@ -1,31 +1,38 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
+import { RequestHandler } from "express";
 import admin from "firebase-admin";
 
-// Initialize Firebase Admin SDK
-let app: admin.app.App;
+// Initialize Firebase Admin SDK once
+let firebaseApp: admin.app.App | null = null;
 
-try {
-  // Get Firebase service account from environment variable
+function initializeFirebase() {
+  if (firebaseApp) {
+    return firebaseApp;
+  }
+
   const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
-  
+
   if (!serviceAccountJson) {
     throw new Error(
       "FIREBASE_SERVICE_ACCOUNT_KEY environment variable not set"
     );
   }
 
-  const serviceAccount = JSON.parse(serviceAccountJson);
+  try {
+    const serviceAccount = JSON.parse(serviceAccountJson);
 
-  app = admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-  });
-} catch (error) {
-  console.error("Failed to initialize Firebase Admin:", error);
+    firebaseApp = admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    });
+
+    return firebaseApp;
+  } catch (error) {
+    console.error("Failed to initialize Firebase Admin:", error);
+    throw new Error("Firebase initialization failed");
+  }
 }
 
-export default async (req: VercelRequest, res: VercelResponse) => {
-  // Only allow POST requests
+export const handleDownload: RequestHandler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -47,11 +54,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       return res.status(400).json({ error: "Invalid storagePath" });
     }
 
-    if (!app) {
-      return res
-        .status(500)
-        .json({ error: "Firebase not properly initialized" });
-    }
+    // Initialize Firebase if not already done
+    const app = initializeFirebase();
 
     // Get reference to the file
     const bucket = admin.storage().bucket();
@@ -72,6 +76,8 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       error instanceof Error ? error.message : "Unknown error";
     console.error("Error generating signed URL:", error);
 
-    return res.status(500).json({ error: "Failed to generate signed URL" });
+    return res
+      .status(500)
+      .json({ error: "Failed to generate signed URL" });
   }
 };
