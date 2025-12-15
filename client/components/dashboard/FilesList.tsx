@@ -75,34 +75,13 @@ export function FilesList({
     setDownloadingId(file.id);
 
     try {
-      const response = await fetch("/api/download", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          storagePath: file.storagePath,
-          fileName: file.name,
-        }),
-      });
+      const storageRef = ref(storage, file.storagePath);
+      const downloadUrl = await getDownloadURL(storageRef);
+
+      const response = await fetch(downloadUrl);
 
       if (!response.ok) {
-        let errorMessage = "Failed to download file";
-        const contentType = response.headers.get("content-type");
-
-        try {
-          if (contentType?.includes("application/json")) {
-            const error = await response.json();
-            errorMessage = error.error || errorMessage;
-          } else {
-            const text = await response.text();
-            errorMessage = text.slice(0, 100) || errorMessage;
-          }
-        } catch {
-          errorMessage = `Server error (${response.status})`;
-        }
-
-        throw new Error(errorMessage);
+        throw new Error(`Failed to download file: ${response.statusText}`);
       }
 
       const blob = await response.blob();
