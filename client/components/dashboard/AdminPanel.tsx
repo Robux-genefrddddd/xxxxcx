@@ -64,40 +64,36 @@ export function AdminPanel({ theme, userRole, userId }: AdminPanelProps) {
   const visibleTabs = adminTabs.filter((tab) => tab.visible);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div>
-        <h2 className="text-xl font-bold" style={{ color: colors.text }}>
-          Admin Console
+      <div className="border-b" style={{ borderColor: colors.border }}>
+        <h2 className="text-lg font-semibold pb-3" style={{ color: colors.text }}>
+          Admin
         </h2>
-        <p className="text-xs mt-1" style={{ color: colors.textSecondary }}>
-          System administration and configuration
-        </p>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex gap-2 flex-wrap">
+      <div className="flex gap-2 flex-wrap border-b" style={{ borderColor: colors.border }}>
         {visibleTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg font-medium text-sm transition-all duration-200 border"
+            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors border-b-2 -mb-1"
             style={{
-              backgroundColor:
+              backgroundColor: "transparent",
+              borderBottomColor:
                 activeTab === tab.id ? colors.primary : "transparent",
-              borderColor:
-                activeTab === tab.id ? colors.primary : colors.border,
-              color: activeTab === tab.id ? "#FFFFFF" : colors.textSecondary,
+              color: activeTab === tab.id ? colors.text : colors.textSecondary,
             }}
           >
             {tab.icon}
-            <span className="hidden sm:inline text-xs">{tab.label}</span>
+            <span className="hidden sm:inline text-xs font-medium">{tab.label}</span>
           </button>
         ))}
       </div>
 
       {/* Tab Content */}
-      <div className="mt-6">
+      <div className="mt-4">
         {activeTab === "keys" && canManageKeys(userRole) && (
           <AdminKeyManagement
             theme={theme}
