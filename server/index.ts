@@ -3,6 +3,7 @@ import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import { handleDemo } from "./routes/demo";
+import { handleDownload } from "./routes/download";
 
 // Rate limiting configuration for DDoS protection
 // Disable in development for easier testing
@@ -90,6 +91,7 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+  app.post("/api/download", handleDownload);
 
   // Note: In development, Vite's dev server handles static files and SPA routing.
   // In production, node-build.ts handles static files and SPA fallback.

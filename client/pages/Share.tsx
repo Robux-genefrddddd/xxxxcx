@@ -8,9 +8,8 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { ref, getDownloadURL } from "firebase/storage";
 import { useToast } from "@/hooks/use-toast";
 
 interface SharedFile {
@@ -109,16 +108,27 @@ export default function Share() {
       const fileData = fileSnap.data();
 
       if (fileData?.storagePath) {
-        const storageRef = ref(storage, fileData.storagePath);
-        const downloadUrl = await getDownloadURL(storageRef);
+        const response = await fetch("/api/download", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            storagePath: fileData.storagePath,
+            fileName: file.name,
+          }),
+        });
 
-        const a = document.createElement("a");
-        a.href = downloadUrl;
-        a.download = file.name;
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(
+            errorData.error || `Download failed with status ${response.status}`,
+          );
+        }
+
+        const { signedUrl } = await response.json();
+
+        window.location.href = signedUrl;
       }
     } catch (err) {
       const errorMessage =
