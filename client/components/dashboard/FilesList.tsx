@@ -75,39 +75,28 @@ export function FilesList({
     setDownloadingId(file.id);
 
     try {
-      const storageRef = ref(storage, file.storagePath);
-      const downloadUrl = await getDownloadURL(storageRef);
-
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = "blob";
-        xhr.onload = () => {
-          if (xhr.status === 200) {
-            resolve(xhr.response);
-          } else {
-            reject(new Error(`Download failed with status ${xhr.status}`));
-          }
-        };
-        xhr.onerror = () => reject(new Error("Network request failed"));
-        xhr.onabort = () => reject(new Error("Download cancelled"));
-        xhr.open("GET", downloadUrl);
-        xhr.send();
+      const response = await fetch("/api/download", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          storagePath: file.storagePath,
+          fileName: file.name || "download",
+        }),
       });
 
-      const blobUrl = URL.createObjectURL(blob);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.error || `Download failed with status ${response.status}`
+        );
+      }
 
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.download = file.name || "download";
-      link.style.display = "none";
+      const { signedUrl } = await response.json();
 
-      document.body.appendChild(link);
-      link.click();
-
-      setTimeout(() => {
-        document.body.removeChild(link);
-        URL.revokeObjectURL(blobUrl);
-      }, 100);
+      // Redirect to signed URL - browser handles download automatically
+      window.location.href = signedUrl;
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
