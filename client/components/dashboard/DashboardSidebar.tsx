@@ -206,7 +206,7 @@ export function DashboardSidebar({
         </div>
 
         {/* Storage Info */}
-        {userPlan && (
+        {userPlan ? (
           <div className="space-y-2 bg-black bg-opacity-20 rounded-2xl p-3">
             <div className="flex items-center justify-between">
               <p
@@ -245,10 +245,7 @@ export function DashboardSidebar({
               <p className="text-xs" style={{ color: colors.textSecondary }}>
                 {(() => {
                   const limit = getStorageLimitDisplay();
-                  if (!limit.showLimit) {
-                    return limit.text;
-                  }
-                  return `${limit.text} limit`;
+                  return limit.showLimit ? `${limit.text} limit` : limit.text;
                 })()}
               </p>
               <p
@@ -266,7 +263,7 @@ export function DashboardSidebar({
               </p>
             </div>
           </div>
-        )}
+        ) : null}
 
         {userPlan && userPlan.type === "free" && onUpgradeClick && (
           <button
