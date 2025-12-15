@@ -161,28 +161,26 @@ export function AdminKeyManagement({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
       {/* Header with Generate Button */}
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h3 className="text-xl font-bold" style={{ color: colors.text }}>
-            Premium Keys
-          </h3>
-          <p className="text-sm mt-1" style={{ color: colors.textSecondary }}>
-            Manage license keys for premium access
-          </p>
-        </div>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <h3 className="text-base font-semibold" style={{ color: colors.text }}>
+          Premium Keys
+        </h3>
         {canCreateKeys(userRole) && (
           <button
             onClick={() => setShowGenerateForm(!showGenerateForm)}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded transition-colors border"
             style={{
-              backgroundColor: colors.accent,
-              color: "#FFFFFF",
+              backgroundColor: showGenerateForm
+                ? colors.primary
+                : "transparent",
+              borderColor: colors.border,
+              color: showGenerateForm ? "#FFFFFF" : colors.text,
             }}
           >
-            <Plus className="w-4 h-4" />
-            {showGenerateForm ? "Cancel" : "Generate Key"}
+            <Plus className="w-3.5 h-3.5" />
+            {showGenerateForm ? "Cancel" : "New Key"}
           </button>
         )}
       </div>
@@ -190,14 +188,14 @@ export function AdminKeyManagement({
       {/* Generate Key Form */}
       {showGenerateForm && canCreateKeys(userRole) && (
         <div
-          className="p-6 rounded-lg border space-y-4"
+          className="p-3 rounded border space-y-3 bg-opacity-50"
           style={{
-            backgroundColor: colors.card,
+            backgroundColor: colors.sidebar,
             borderColor: colors.border,
           }}
         >
-          <h4 className="font-semibold text-lg" style={{ color: colors.text }}>
-            Generate New Premium Key
+          <h4 className="font-semibold text-sm" style={{ color: colors.text }}>
+            New Key
           </h4>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

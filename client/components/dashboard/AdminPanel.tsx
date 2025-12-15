@@ -64,52 +64,44 @@ export function AdminPanel({ theme, userRole, userId }: AdminPanelProps) {
   const visibleTabs = adminTabs.filter((tab) => tab.visible);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4">
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold" style={{ color: colors.text }}>
-          Admin Console
+      <div className="border-b" style={{ borderColor: colors.border }}>
+        <h2
+          className="text-lg font-semibold pb-3"
+          style={{ color: colors.text }}
+        >
+          Admin
         </h2>
-        <p className="text-sm mt-2" style={{ color: colors.textSecondary }}>
-          System administration and configuration
-        </p>
       </div>
 
       {/* Navigation Tabs */}
       <div
-        className="border rounded-lg overflow-hidden"
-        style={{
-          backgroundColor: colors.card,
-          borderColor: colors.border,
-        }}
+        className="flex gap-2 flex-wrap border-b"
+        style={{ borderColor: colors.border }}
       >
-        <div
-          className="flex gap-1 p-2 flex-wrap"
-          style={{
-            backgroundColor: colors.sidebar,
-            borderBottomColor: colors.border,
-          }}
-        >
-          {visibleTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm transition-colors"
-              style={{
-                backgroundColor:
-                  activeTab === tab.id ? colors.accent : "transparent",
-                color: activeTab === tab.id ? "#FFFFFF" : colors.textSecondary,
-              }}
-            >
-              {tab.icon}
-              <span className="hidden sm:inline">{tab.label}</span>
-            </button>
-          ))}
-        </div>
+        {visibleTabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className="flex items-center gap-2 px-3 py-2 text-sm transition-colors border-b-2 -mb-1"
+            style={{
+              backgroundColor: "transparent",
+              borderBottomColor:
+                activeTab === tab.id ? colors.primary : "transparent",
+              color: activeTab === tab.id ? colors.text : colors.textSecondary,
+            }}
+          >
+            {tab.icon}
+            <span className="hidden sm:inline text-xs font-medium">
+              {tab.label}
+            </span>
+          </button>
+        ))}
       </div>
 
       {/* Tab Content */}
-      <div className="mt-6">
+      <div className="mt-4">
         {activeTab === "keys" && canManageKeys(userRole) && (
           <AdminKeyManagement
             theme={theme}

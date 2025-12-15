@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Trash2, Shield, Award, Zap, User } from "lucide-react";
+import { Trash2, Shield, Award, Zap, User, Search } from "lucide-react";
 import { getThemeColors } from "@/lib/theme-colors";
 import {
   collection,
@@ -42,6 +42,13 @@ export function AdminUserManagement({
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredUsers = users.filter(
+    (user) =>
+      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.name?.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   useEffect(() => {
     loadUsers();
@@ -178,6 +185,28 @@ export function AdminUserManagement({
         </p>
       </div>
 
+      {/* Search Bar */}
+      {users.length > 0 && (
+        <div className="relative">
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
+            style={{ color: colors.textSecondary }}
+          />
+          <input
+            type="text"
+            placeholder="Search users by email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 rounded-lg border text-sm"
+            style={{
+              backgroundColor: colors.card,
+              borderColor: colors.border,
+              color: colors.text,
+            }}
+          />
+        </div>
+      )}
+
       {/* Users Grid */}
       {loading ? (
         <div className="flex justify-center items-center py-12">
@@ -186,7 +215,7 @@ export function AdminUserManagement({
             style={{ borderColor: colors.accent }}
           ></div>
         </div>
-      ) : users.length === 0 ? (
+      ) : filteredUsers.length === 0 ? (
         <div
           className="p-12 rounded-xl border text-center"
           style={{
@@ -194,11 +223,13 @@ export function AdminUserManagement({
             borderColor: colors.border,
           }}
         >
-          <p style={{ color: colors.textSecondary }}>No users found</p>
+          <p style={{ color: colors.textSecondary }}>
+            {searchQuery ? "No users match your search" : "No users found"}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {users.map((user) => {
+          {filteredUsers.map((user) => {
             const roleInfo = getRoleInfo(user.role);
             const planInfo = getPlanInfo(user.plan);
             const isCurrentUser = user.id === currentUserId;

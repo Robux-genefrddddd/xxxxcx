@@ -68,7 +68,10 @@ export function FilesList({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ storagePath: file.storagePath }),
+        body: JSON.stringify({
+          storagePath: file.storagePath,
+          fileName: file.name,
+        }),
       });
 
       if (!response.ok) {
@@ -90,11 +93,11 @@ export function FilesList({
         throw new Error(errorMessage);
       }
 
-      const data = await response.json();
-      const downloadUrl = data.url;
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
 
       const link = document.createElement("a");
-      link.href = downloadUrl;
+      link.href = blobUrl;
       link.download = file.name || "download";
       link.style.display = "none";
 
@@ -103,6 +106,7 @@ export function FilesList({
 
       setTimeout(() => {
         document.body.removeChild(link);
+        URL.revokeObjectURL(blobUrl);
       }, 100);
     } catch (error) {
       console.error("Error downloading file:", error);

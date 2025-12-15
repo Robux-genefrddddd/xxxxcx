@@ -71,13 +71,14 @@ export function DashboardSidebar({
 }: DashboardSidebarProps) {
   const colors = getThemeColors(theme);
   const storageUsedMB = userPlan ? userPlan.storageUsed / (1024 * 1024) : 0;
-  const storagePercentage = userPlan
-    ? (userPlan.storageUsed / userPlan.storageLimit) * 100
-    : 0;
+  const storagePercentage =
+    userPlan && userPlan.storageLimit !== Infinity
+      ? (userPlan.storageUsed / userPlan.storageLimit) * 100
+      : 0;
 
   const getStorageLimitDisplay = () => {
-    if (!userPlan) return { text: "1 GB", showLimit: true };
-    if (userPlan.storageLimit === Infinity)
+    if (!userPlan) return { text: "1 T", showLimit: true };
+    if (userPlan.type === "premium")
       return { text: "Unlimited", showLimit: false };
     const limitTB = userPlan.storageLimit / (1024 * 1024 * 1024 * 1024);
     if (limitTB >= 1)
@@ -155,7 +156,7 @@ export function DashboardSidebar({
                   style={{
                     filter:
                       item.id === "files"
-                        ? "none"
+                        ? "brightness(1) invert(1)"
                         : isActive
                           ? "brightness(1) invert(1)"
                           : "brightness(1.5) invert(1) opacity(0.9)",
@@ -180,13 +181,14 @@ export function DashboardSidebar({
           <div
             className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center"
             style={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: "transparent",
             }}
           >
             <img
               src="https://www.iconpacks.net/icons/2/free-user-icon-3296-thumb.png"
               alt="User Avatar"
               className="w-6 h-6 object-contain"
+              style={{ filter: "brightness(0) invert(1)" }}
             />
           </div>
           <div className="flex-1 min-w-0">
@@ -206,7 +208,7 @@ export function DashboardSidebar({
         </div>
 
         {/* Storage Info */}
-        {userPlan && (
+        {userPlan ? (
           <div className="space-y-2 bg-black bg-opacity-20 rounded-2xl p-3">
             <div className="flex items-center justify-between">
               <p
@@ -245,7 +247,7 @@ export function DashboardSidebar({
               <p className="text-xs" style={{ color: colors.textSecondary }}>
                 {(() => {
                   const limit = getStorageLimitDisplay();
-                  return `${limit.text}${limit.showLimit ? " limit" : ""}`;
+                  return limit.showLimit ? `${limit.text} limit` : limit.text;
                 })()}
               </p>
               <p
@@ -263,7 +265,7 @@ export function DashboardSidebar({
               </p>
             </div>
           </div>
-        )}
+        ) : null}
 
         {userPlan && userPlan.type === "free" && onUpgradeClick && (
           <button
