@@ -78,13 +78,24 @@ export function FilesList({
       const storageRef = ref(storage, file.storagePath);
       const downloadUrl = await getDownloadURL(storageRef);
 
-      const response = await fetch(downloadUrl);
+      const blob = await new Promise<Blob>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        xhr.onload = () => {
+          if (xhr.status === 200) {
+            resolve(xhr.response);
+          } else {
+            reject(
+              new Error(`Download failed with status ${xhr.status}`),
+            );
+          }
+        };
+        xhr.onerror = () => reject(new Error("Network request failed"));
+        xhr.onabort = () => reject(new Error("Download cancelled"));
+        xhr.open("GET", downloadUrl);
+        xhr.send();
+      });
 
-      if (!response.ok) {
-        throw new Error(`Failed to download file: ${response.statusText}`);
-      }
-
-      const blob = await response.blob();
       const blobUrl = URL.createObjectURL(blob);
 
       const link = document.createElement("a");
