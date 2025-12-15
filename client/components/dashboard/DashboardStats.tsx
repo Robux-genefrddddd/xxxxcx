@@ -236,59 +236,6 @@ export function DashboardStats({ files, theme, plan }: DashboardStatsProps) {
         </ResponsiveContainer>
       </div>
 
-      {/* STORAGE BREAKDOWN - HORIZONTAL BARS */}
-      <div>
-        <p
-          className="text-xs font-medium uppercase tracking-wider mb-4"
-          style={{ color: colors.textSecondary }}
-        >
-          Storage Breakdown
-        </p>
-        <div className="space-y-4">
-          {storageBreakdown.length > 0 ? (
-            storageBreakdown.map((item) => {
-              const percentage =
-                totalFiles > 0 ? (item.count / totalFiles) * 100 : 0;
-              return (
-                <div key={item.type}>
-                  <div className="flex items-center justify-between mb-2">
-                    <span
-                      className="text-sm font-medium"
-                      style={{ color: colors.text }}
-                    >
-                      {item.type}
-                    </span>
-                    <span
-                      className="text-sm font-semibold"
-                      style={{ color: item.color }}
-                    >
-                      {item.count} file{item.count !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  <div
-                    className="h-2.5 rounded-md overflow-hidden"
-                    style={{
-                      backgroundColor: colors.border,
-                    }}
-                  >
-                    <div
-                      className="h-2.5 transition-all duration-500"
-                      style={{
-                        width: `${percentage}%`,
-                        backgroundColor: item.color,
-                      }}
-                    />
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <p className="text-sm py-6" style={{ color: colors.textSecondary }}>
-              No files yet
-            </p>
-          )}
-        </div>
-      </div>
     </div>
   );
 }
