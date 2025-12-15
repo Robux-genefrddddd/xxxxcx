@@ -553,6 +553,7 @@ export default function Dashboard() {
                   onCopyShareLink={(url) => {
                     alert("Share link copied to clipboard!");
                   }}
+                  isPremium={userPlan?.type === "premium"}
                 />
               </div>
             )}
