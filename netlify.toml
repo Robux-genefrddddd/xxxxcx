@@ -1,3 +1,14 @@
-# This project is deployed on Vercel, not Netlify.
-# Netlify configuration is not used in production.
-# To deploy on Netlify, configure the build command and functions directory if needed.
+[build]
+command = "pnpm build:client"
+functions = "netlify/functions"
+publish = "dist/spa"
+
+[[redirects]]
+from = "/api/*"
+to = "/.netlify/functions/api/:splat"
+status = 200
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
