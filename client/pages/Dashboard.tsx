@@ -563,9 +563,7 @@ export default function Dashboard() {
                   loading={loading}
                   theme={theme}
                   onUnshare={handleUnshareFile}
-                  onCopyShareLink={(url) => {
-                    alert("Share link copied to clipboard!");
-                  }}
+                  onCopyShareLink={() => {}}
                 />
               </div>
             )}
