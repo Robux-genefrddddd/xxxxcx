@@ -246,81 +246,70 @@ export function ShareFileModal({
 
         {/* Footer */}
         <div
-          className="px-6 py-4 border-t space-y-3"
+          className="px-5 py-3 border-t flex gap-2"
           style={{
-            borderColor: colors.border,
+            borderColor: "#1F2124",
           }}
         >
           {step === "options" ? (
             <>
               <button
+                onClick={onClose}
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#D1D5DB",
+                  border: "1px solid #374151",
+                }}
+              >
+                Cancel
+              </button>
+              <button
                 onClick={handleShare}
                 disabled={
                   loading || (shareType === "password" && password.length < 6)
                 }
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all disabled:opacity-50 hover:opacity-90"
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all disabled:opacity-50 hover:opacity-90"
                 style={{
-                  backgroundColor: colors.accentLight,
-                  color: colors.primary,
+                  backgroundColor: colors.primary,
+                  color: "white",
                 }}
               >
-                {loading ? "Creating share link..." : "Create Share Link"}
-              </button>
-              <button
-                onClick={onClose}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all border hover:opacity-80"
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: colors.border,
-                  color: colors.textSecondary,
-                }}
-              >
-                Cancel
+                {loading ? "Creating..." : "Share"}
               </button>
             </>
           ) : (
             <>
               <button
-                onClick={handleCopyLink}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 hover:opacity-90"
+                onClick={handleReset}
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all hover:opacity-90"
                 style={{
-                  backgroundColor: colors.accentLight,
-                  color: colors.primary,
+                  backgroundColor: "transparent",
+                  color: "#D1D5DB",
+                  border: "1px solid #374151",
+                }}
+              >
+                New
+              </button>
+              <button
+                onClick={handleCopyLink}
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all flex items-center justify-center gap-1 hover:opacity-90"
+                style={{
+                  backgroundColor: colors.primary,
+                  color: "white",
                 }}
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4" />
-                    <span>Copied!</span>
+                    <Check className="w-3 h-3" />
+                    <span>Copied</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4" />
-                    <span>Copy Link</span>
+                    <Copy className="w-3 h-3" />
+                    <span>Copy</span>
                   </>
                 )}
-              </button>
-              <button
-                onClick={handleReset}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all border hover:opacity-80"
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: colors.border,
-                  color: colors.textSecondary,
-                }}
-              >
-                Create Another Link
-              </button>
-              <button
-                onClick={onClose}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all border hover:opacity-80"
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: colors.border,
-                  color: colors.textSecondary,
-                }}
-              >
-                Done
               </button>
             </>
           )}
