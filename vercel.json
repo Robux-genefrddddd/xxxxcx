@@ -1,14 +1,14 @@
 {
   "framework": null,
-  "buildCommand": "pnpm build",
-  "outputDirectory": "dist",
+  "buildCommand": "pnpm build:client",
+  "outputDirectory": "dist/spa",
   "installCommand": "pnpm install",
   "env": {
     "NODE_ENV": "production"
   },
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/(?!api/)(.+)",
       "destination": "/index.html"
     }
   ]
