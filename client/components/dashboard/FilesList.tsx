@@ -49,6 +49,7 @@ export function FilesList({
   onCopyShareLink,
   isPremium = false,
 }: FilesListProps) {
+  const { toast } = useToast();
   const colors = getThemeColors(theme);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
@@ -63,7 +64,10 @@ export function FilesList({
 
   const handleDownload = async (file: FileItem) => {
     if (!file.storagePath) {
-      console.error("File storage path not found for", file.name);
+      toast({
+        title: "Error",
+        description: "File information not found. Please refresh and try again.",
+      });
       return;
     }
 
