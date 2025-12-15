@@ -14,6 +14,7 @@ import { storage } from "@/lib/firebase";
 import { ref, getDownloadURL } from "firebase/storage";
 import { getThemeColors } from "@/lib/theme-colors";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface FileItem {
   id: string;
