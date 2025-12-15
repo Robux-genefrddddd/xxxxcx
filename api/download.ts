@@ -89,10 +89,11 @@ export default async function handler(
       res.setHeader("Expires", "0");
 
       const buffer = await response.arrayBuffer();
-      res.status(200).send(Buffer.from(buffer));
+      res.statusCode = 200;
+      res.end(Buffer.from(buffer));
     } catch (fetchError) {
       console.error("Error fetching from Firebase Storage:", fetchError);
-      return res.status(500).json({
+      return sendJson(res, 500, {
         error: "Failed to fetch file from storage",
       });
     }
@@ -100,6 +101,6 @@ export default async function handler(
     console.error("File download error:", error);
     const errorMsg = error instanceof Error ? error.message : "Unknown error";
 
-    res.status(500).json({ error: `Download failed: ${errorMsg}` });
+    return sendJson(res, 500, { error: `Download failed: ${errorMsg}` });
   }
 }
