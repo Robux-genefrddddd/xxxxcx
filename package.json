@@ -25,6 +25,7 @@
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
     "firebase": "^10.13.2",
+    "firebase-admin": "^12.0.0",
     "react-confetti-boom": "^2.0.1",
     "zod": "^3.25.76"
   },
