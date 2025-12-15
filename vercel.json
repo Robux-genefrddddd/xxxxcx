@@ -1,14 +1,23 @@
 {
   "framework": null,
-  "buildCommand": "pnpm build:client",
+  "buildCommand": "pnpm build",
   "outputDirectory": "dist/spa",
   "installCommand": "pnpm install",
   "env": {
     "NODE_ENV": "production"
   },
+  "serverlessFunctions": {
+    "api/**": {
+      "runtime": "nodejs20.x"
+    }
+  },
   "rewrites": [
     {
-      "source": "/(?!api/)(.+)",
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
