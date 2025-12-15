@@ -49,10 +49,11 @@ export function ConfirmDialog({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xs rounded-lg animate-in zoom-in-95 duration-200"
+        className="w-full max-w-xs animate-in zoom-in-95 duration-200"
         style={{
           backgroundColor: "#111214",
           border: "1px solid #1F2124",
+          borderRadius: "16px",
         }}
       >
         {/* Header */}
