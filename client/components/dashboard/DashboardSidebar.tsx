@@ -155,7 +155,7 @@ export function DashboardSidebar({
                   style={{
                     filter:
                       item.id === "files"
-                        ? "none"
+                        ? "brightness(1) invert(1)"
                         : isActive
                           ? "brightness(1) invert(1)"
                           : "brightness(1.5) invert(1) opacity(0.9)",
