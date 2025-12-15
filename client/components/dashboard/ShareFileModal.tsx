@@ -56,7 +56,6 @@ export function ShareFileModal({
       }
     } catch (error) {
       console.error("Error sharing file:", error);
-      alert("Failed to share file");
     } finally {
       setLoading(false);
     }
@@ -79,129 +78,113 @@ export function ShareFileModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        backdropFilter: "blur(4px)",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+        backdropFilter: "blur(2px)",
       }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-2xl border overflow-hidden shadow-2xl"
+        className="w-full max-w-sm animate-in zoom-in-95 duration-200"
         style={{
-          backgroundColor: colors.card,
-          borderColor: colors.border,
+          backgroundColor: "#111214",
+          border: "1px solid #1F2124",
+          borderRadius: "16px",
         }}
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between p-6 border-b"
+          className="px-5 py-4 border-b"
           style={{
-            borderColor: colors.border,
+            borderColor: "#1F2124",
           }}
         >
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: colors.accentLight }}
-            >
-              <Link2 className="w-5 h-5" style={{ color: colors.primary }} />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold" style={{ color: colors.text }}>
-                {step === "options" ? "Share File" : "Link Ready"}
-              </h2>
-              <p className="text-xs" style={{ color: colors.textSecondary }}>
-                {fileName.length > 30
-                  ? fileName.substring(0, 27) + "..."
-                  : fileName}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded hover:opacity-60 transition-opacity"
-            style={{
-              color: colors.textSecondary,
-            }}
+          <h2
+            className="text-sm font-semibold"
+            style={{ color: "#E5E7EB", letterSpacing: "-0.01em" }}
           >
-            <X className="w-5 h-5" />
-          </button>
+            {step === "options" ? "Share File" : "Share Link Ready"}
+          </h2>
+          <p className="text-xs mt-1" style={{ color: "#6B7280" }}>
+            {fileName.length > 35
+              ? fileName.substring(0, 32) + "..."
+              : fileName}
+          </p>
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="px-5 py-4 space-y-4">
           {step === "options" ? (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Share Type Selection */}
-              <div>
-                <label
-                  className="block text-sm font-medium mb-3"
-                  style={{ color: colors.text }}
-                >
-                  Share Type
-                </label>
-                <div className="space-y-2">
-                  {[
-                    {
-                      type: "link",
-                      label: "Public Link",
-                      desc: "Anyone with the link can view",
-                      icon: "🔗",
-                    },
-                    {
-                      type: "password",
-                      label: "Password Protected",
-                      desc: "Requires a password to access",
-                      icon: "🔐",
-                    },
-                  ].map((option) => (
-                    <button
-                      key={option.type}
-                      onClick={() =>
-                        setShareType(option.type as "link" | "password")
-                      }
-                      className="w-full p-3 rounded-xl border-2 transition-all text-left hover:opacity-80"
-                      style={{
-                        backgroundColor:
-                          shareType === option.type
-                            ? colors.accentLight
-                            : "transparent",
-                        borderColor:
-                          shareType === option.type
-                            ? colors.primary
-                            : colors.border,
-                      }}
-                    >
-                      <div className="flex items-start gap-3">
-                        <span className="text-xl mt-0.5">{option.icon}</span>
-                        <div>
-                          <p
-                            className="font-medium"
-                            style={{ color: colors.text }}
-                          >
-                            {option.label}
-                          </p>
-                          <p
-                            className="text-xs mt-0.5"
-                            style={{ color: colors.textSecondary }}
-                          >
-                            {option.desc}
-                          </p>
-                        </div>
+              <div className="space-y-2">
+                {[
+                  {
+                    type: "link",
+                    label: "Public Link",
+                    desc: "Anyone with the link can view",
+                    Icon: Link2,
+                  },
+                  {
+                    type: "password",
+                    label: "Password Protected",
+                    desc: "Requires a password to access",
+                    Icon: Lock,
+                  },
+                ].map((option) => (
+                  <button
+                    key={option.type}
+                    onClick={() =>
+                      setShareType(option.type as "link" | "password")
+                    }
+                    className="w-full p-3 rounded-lg border transition-all text-left hover:opacity-90"
+                    style={{
+                      backgroundColor:
+                        shareType === option.type ? "#1A1D20" : "transparent",
+                      borderColor:
+                        shareType === option.type ? colors.primary : "#374151",
+                    }}
+                  >
+                    <div className="flex items-start gap-3">
+                      <option.Icon
+                        className="w-4 h-4 mt-0.5 flex-shrink-0"
+                        style={{
+                          color:
+                            shareType === option.type
+                              ? colors.primary
+                              : "#6B7280",
+                        }}
+                      />
+                      <div className="flex-1">
+                        <p
+                          className="text-xs font-medium"
+                          style={{
+                            color:
+                              shareType === option.type ? "#F3F4F6" : "#D1D5DB",
+                          }}
+                        >
+                          {option.label}
+                        </p>
+                        <p
+                          className="text-xs mt-1"
+                          style={{ color: "#6B7280" }}
+                        >
+                          {option.desc}
+                        </p>
                       </div>
-                    </button>
-                  ))}
-                </div>
+                    </div>
+                  </button>
+                ))}
               </div>
 
               {/* Password Input */}
               {shareType === "password" && (
-                <div>
+                <div className="space-y-2 pt-2">
                   <label
-                    className="block text-sm font-medium mb-2"
-                    style={{ color: colors.text }}
+                    className="block text-xs font-medium"
+                    style={{ color: "#D1D5DB" }}
                   >
                     Password
                   </label>
@@ -210,105 +193,57 @@ export function ShareFileModal({
                       type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter a strong password"
-                      className="w-full px-4 py-3 rounded-xl border text-sm transition-all pr-10"
+                      placeholder="Enter password"
+                      className="w-full px-3 py-2 rounded-lg border text-xs transition-all pr-8"
                       style={{
-                        backgroundColor: colors.sidebar,
-                        borderColor: colors.border,
-                        color: colors.text,
+                        backgroundColor: "#1A1D20",
+                        borderColor: "#374151",
+                        color: "#E5E7EB",
                       }}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 transition-opacity hover:opacity-70"
-                      style={{ color: colors.textSecondary }}
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 transition-opacity hover:opacity-70"
+                      style={{ color: "#6B7280" }}
                     >
                       {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
+                        <EyeOff className="w-3.5 h-3.5" />
                       ) : (
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-3.5 h-3.5" />
                       )}
                     </button>
                   </div>
-                  <p
-                    className="text-xs mt-2"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Passwords should be at least 6 characters
+                  <p className="text-xs" style={{ color: "#6B7280" }}>
+                    At least 6 characters
                   </p>
                 </div>
               )}
-
-              {/* Info Box */}
-              <div
-                className="p-3 rounded-xl border space-y-2"
-                style={{
-                  backgroundColor: colors.sidebar,
-                  borderColor: colors.border,
-                }}
-              >
-                <p className="text-xs" style={{ color: colors.textSecondary }}>
-                  ✓ Shared files are only accessible via direct link
-                </p>
-                <p className="text-xs" style={{ color: colors.textSecondary }}>
-                  ✓ Recipients can download and view the file
-                </p>
-              </div>
             </div>
           ) : (
-            <div className="text-center space-y-4">
-              <div
-                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto"
-                style={{
-                  backgroundColor: "rgba(34, 197, 94, 0.1)",
-                }}
-              >
-                <Check className="w-8 h-8" style={{ color: "#22C55E" }} />
+            <div className="space-y-3 text-center py-2">
+              <div className="text-sm font-medium" style={{ color: "#10B981" }}>
+                ✓ Link created successfully
               </div>
-
-              <div>
-                <h3 className="font-bold text-lg" style={{ color: "#22C55E" }}>
-                  Share Link Ready!
-                </h3>
-                <p
-                  className="text-sm mt-1"
-                  style={{ color: colors.textSecondary }}
-                >
-                  Your file is ready to share
-                </p>
-              </div>
-
               <div
-                className="p-3 rounded-xl border-2 overflow-hidden"
+                className="p-3 rounded-lg overflow-hidden"
                 style={{
-                  backgroundColor: colors.sidebar,
-                  borderColor: colors.primary,
+                  backgroundColor: "#1A1D20",
+                  borderColor: "#374151",
+                  border: "1px solid #374151",
                 }}
               >
                 <p
                   className="text-xs break-all font-mono"
-                  style={{ color: colors.textSecondary }}
+                  style={{ color: "#9CA3AF" }}
                 >
                   {shareUrl}
                 </p>
               </div>
-
               {shareType === "password" && (
-                <div
-                  className="p-3 rounded-xl border-l-4"
-                  style={{
-                    backgroundColor: "rgba(59, 130, 246, 0.1)",
-                    borderLeftColor: colors.primary,
-                  }}
-                >
-                  <p
-                    className="text-xs"
-                    style={{ color: colors.textSecondary }}
-                  >
-                    Password protected with: <strong>{password}</strong>
-                  </p>
-                </div>
+                <p className="text-xs" style={{ color: "#9CA3AF" }}>
+                  Password protected: <strong>{password}</strong>
+                </p>
               )}
             </div>
           )}
@@ -316,81 +251,70 @@ export function ShareFileModal({
 
         {/* Footer */}
         <div
-          className="px-6 py-4 border-t space-y-3"
+          className="px-5 py-3 border-t flex gap-2"
           style={{
-            borderColor: colors.border,
+            borderColor: "#1F2124",
           }}
         >
           {step === "options" ? (
             <>
               <button
+                onClick={onClose}
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all hover:opacity-90"
+                style={{
+                  backgroundColor: "transparent",
+                  color: "#D1D5DB",
+                  border: "1px solid #374151",
+                }}
+              >
+                Cancel
+              </button>
+              <button
                 onClick={handleShare}
                 disabled={
                   loading || (shareType === "password" && password.length < 6)
                 }
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all disabled:opacity-50 hover:opacity-90"
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all disabled:opacity-50 hover:opacity-90"
                 style={{
-                  backgroundColor: colors.accentLight,
-                  color: colors.primary,
+                  backgroundColor: colors.primary,
+                  color: "white",
                 }}
               >
-                {loading ? "Creating share link..." : "Create Share Link"}
-              </button>
-              <button
-                onClick={onClose}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all border hover:opacity-80"
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: colors.border,
-                  color: colors.textSecondary,
-                }}
-              >
-                Cancel
+                {loading ? "Creating..." : "Share"}
               </button>
             </>
           ) : (
             <>
               <button
-                onClick={handleCopyLink}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all flex items-center justify-center gap-2 hover:opacity-90"
+                onClick={handleReset}
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all hover:opacity-90"
                 style={{
-                  backgroundColor: colors.accentLight,
-                  color: colors.primary,
+                  backgroundColor: "transparent",
+                  color: "#D1D5DB",
+                  border: "1px solid #374151",
+                }}
+              >
+                New
+              </button>
+              <button
+                onClick={handleCopyLink}
+                className="flex-1 py-2 px-3 text-xs font-medium rounded transition-all flex items-center justify-center gap-1 hover:opacity-90"
+                style={{
+                  backgroundColor: colors.primary,
+                  color: "white",
                 }}
               >
                 {copied ? (
                   <>
-                    <Check className="w-4 h-4" />
-                    <span>Copied!</span>
+                    <Check className="w-3 h-3" />
+                    <span>Copied</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4" />
-                    <span>Copy Link</span>
+                    <Copy className="w-3 h-3" />
+                    <span>Copy</span>
                   </>
                 )}
-              </button>
-              <button
-                onClick={handleReset}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all border hover:opacity-80"
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: colors.border,
-                  color: colors.textSecondary,
-                }}
-              >
-                Create Another Link
-              </button>
-              <button
-                onClick={onClose}
-                className="w-full py-2 px-4 rounded-xl font-medium transition-all border hover:opacity-80"
-                style={{
-                  backgroundColor: "transparent",
-                  borderColor: colors.border,
-                  color: colors.textSecondary,
-                }}
-              >
-                Done
               </button>
             </>
           )}

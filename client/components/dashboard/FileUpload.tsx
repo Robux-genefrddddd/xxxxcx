@@ -3,10 +3,11 @@ import { Upload } from "lucide-react";
 import { getThemeColors } from "@/lib/theme-colors";
 
 interface FileUploadProps {
-  onFileSelected: (file: File) => void;
+  onFileSelected: (files: File[]) => void;
   uploading: boolean;
   theme: string;
   maxFileSize?: number; // in MB
+  isPremium?: boolean;
 }
 
 export function FileUpload({
@@ -14,6 +15,7 @@ export function FileUpload({
   uploading,
   theme,
   maxFileSize = 300,
+  isPremium = false,
 }: FileUploadProps) {
   const colors = getThemeColors(theme);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,14 +38,16 @@ export function FileUpload({
 
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
-      onFileSelected(files[0]);
+      const selectedFiles = isPremium ? Array.from(files) : [files[0]];
+      onFileSelected(selectedFiles);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
-      onFileSelected(files[0]);
+      const selectedFiles = isPremium ? Array.from(files) : [files[0]];
+      onFileSelected(selectedFiles);
     }
   };
 
@@ -66,6 +70,7 @@ export function FileUpload({
         onChange={handleChange}
         disabled={uploading}
         className="hidden"
+        multiple={isPremium}
       />
 
       <div className="flex flex-col items-center gap-5">
@@ -90,7 +95,9 @@ export function FileUpload({
               color: colors.text,
             }}
           >
-            {dragActive ? "Drop file here" : "Upload a file"}
+            {dragActive
+              ? `Drop ${isPremium ? "files" : "file"} here`
+              : `Upload ${isPremium ? "files" : "a file"}`}
           </p>
           <p
             className="text-sm"

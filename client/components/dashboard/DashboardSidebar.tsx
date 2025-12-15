@@ -29,7 +29,7 @@ const getNavItems = (userRole?: UserRole) => {
       label: "Files",
       icon: null,
       imageUrl:
-        "https://cdn-icons-png.freepik.com/256/7795/7795785.png?semt=ais_white_label",
+        "https://i.ibb.co/1ft6PM7b/pngtree-vector-folder-icon-png-image-855010-removebg-preview.png",
     },
     {
       id: "shared",
@@ -154,12 +154,9 @@ export function DashboardSidebar({
                   alt={item.label}
                   className="w-4 h-4 object-contain"
                   style={{
-                    filter:
-                      item.id === "files"
-                        ? "brightness(1) invert(1)"
-                        : isActive
-                          ? "brightness(1) invert(1)"
-                          : "brightness(1.5) invert(1) opacity(0.9)",
+                    filter: isActive
+                      ? "brightness(0) invert(1)"
+                      : "brightness(0) invert(1) opacity(0.7)",
                   }}
                 />
               ) : (

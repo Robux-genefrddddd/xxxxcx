@@ -187,15 +187,16 @@ export default function Dashboard() {
     }
   };
 
-  const handleFileUpload = async (file: File) => {
-    if (!file || !auth.currentUser) return;
+  const handleFileUpload = async (filesToUpload: File[]) => {
+    if (!filesToUpload || filesToUpload.length === 0 || !auth.currentUser)
+      return;
 
     // Determine max file size based on plan
     const maxFileSize = userPlan.type === "premium" ? 800 : 300;
     const maxFileSizeBytes = maxFileSize * 1024 * 1024;
 
     // Reset upload state
-    setUploadFileName(file.name);
+    setUploadFileName(filesToUpload.map((f) => f.name).join(", "));
     setUploadProgress(0);
     setUploadStage("validating");
     setUploadError(null);
@@ -203,26 +204,32 @@ export default function Dashboard() {
     setUploading(true);
 
     try {
-      // Stage 1: Validate file
+      // Stage 1: Validate all files
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Check file size based on plan
-      if (file.size > maxFileSizeBytes) {
-        setUploadError(
-          `File size exceeds ${maxFileSize}MB limit. Your file is ${(file.size / (1024 * 1024)).toFixed(2)}MB`,
-        );
-        setUploadStage("error");
-        setUploading(false);
-        return;
+      // Validate all files before uploading
+      let totalNewSize = 0;
+      for (const file of filesToUpload) {
+        // Check file size based on plan
+        if (file.size > maxFileSizeBytes) {
+          setUploadError(
+            `File "${file.name}" exceeds ${maxFileSize}MB limit. It is ${(file.size / (1024 * 1024)).toFixed(2)}MB`,
+          );
+          setUploadStage("error");
+          setUploading(false);
+          return;
+        }
+        totalNewSize += file.size;
       }
 
-      // Check storage limit
-      const newStorageTotal = userPlan.storageUsed + file.size;
+      // Check total storage limit
+      const newStorageTotal = userPlan.storageUsed + totalNewSize;
       if (newStorageTotal > userPlan.storageLimit) {
         const remainingStorage =
           (userPlan.storageLimit - userPlan.storageUsed) / (1024 * 1024);
+        const neededSize = (totalNewSize / (1024 * 1024)).toFixed(2);
         setUploadError(
-          `Storage limit exceeded. You have ${remainingStorage.toFixed(1)}MB remaining but this file is ${(file.size / (1024 * 1024)).toFixed(2)}MB`,
+          `Storage limit exceeded. You have ${remainingStorage.toFixed(1)}MB remaining but need ${neededSize}MB`,
         );
         setUploadStage("error");
         setUploading(false);
@@ -231,12 +238,8 @@ export default function Dashboard() {
 
       setUploadProgress(20);
 
-      // Stage 2: Upload to storage
+      // Stage 2: Upload all files
       setUploadStage("uploading");
-      const fileRef = ref(
-        storage,
-        `files/${auth.currentUser.uid}/${Date.now()}_${file.name}`,
-      );
 
       // Simulate upload progress
       let lastProgress = 20;
@@ -247,32 +250,47 @@ export default function Dashboard() {
         }
       }, 500);
 
-      await uploadBytes(fileRef, file);
+      const uploadPromises = filesToUpload.map(async (file) => {
+        const fileRef = ref(
+          storage,
+          `files/${auth.currentUser.uid}/${Date.now()}_${Math.random()}_${file.name}`,
+        );
+
+        await uploadBytes(fileRef, file);
+
+        const fileSize =
+          file.size > 1024 * 1024
+            ? `${(file.size / (1024 * 1024)).toFixed(2)}MB`
+            : `${(file.size / 1024).toFixed(2)}KB`;
+
+        return { fileRef, file, fileSize };
+      });
+
+      const uploadedFiles = await Promise.all(uploadPromises);
       clearInterval(progressInterval);
       setUploadProgress(85);
 
-      const fileSize =
-        file.size > 1024 * 1024
-          ? `${(file.size / (1024 * 1024)).toFixed(2)}MB`
-          : `${(file.size / 1024).toFixed(2)}KB`;
-
-      // Stage 3: Process file
+      // Stage 3: Process all files
       setUploadStage("processing");
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      await addDoc(collection(db, "files"), {
-        userId: auth.currentUser.uid,
-        name: file.name,
-        size: fileSize,
-        uploadedAt: new Date().toISOString(),
-        shared: false,
-        storagePath: fileRef.fullPath,
-      });
+      const dbPromises = uploadedFiles.map((uploaded) =>
+        addDoc(collection(db, "files"), {
+          userId: auth.currentUser.uid,
+          name: uploaded.file.name,
+          size: uploaded.fileSize,
+          uploadedAt: new Date().toISOString(),
+          shared: false,
+          storagePath: uploaded.fileRef.fullPath,
+        }),
+      );
+
+      await Promise.all(dbPromises);
 
       // Update storage used in Firestore
       try {
         const planRef = doc(db, "userPlans", auth.currentUser.uid);
-        const newStorageUsed = userPlan.storageUsed + file.size;
+        const newStorageUsed = userPlan.storageUsed + totalNewSize;
         await updateDoc(planRef, { storageUsed: newStorageUsed });
       } catch (error) {
         console.error("Error updating storage after upload:", error);
@@ -303,8 +321,6 @@ export default function Dashboard() {
   };
 
   const handleUnshareFile = async (fileId: string) => {
-    if (!confirm("Remove sharing for this file?")) return;
-
     try {
       await updateDoc(doc(db, "files", fileId), {
         shared: false,
@@ -313,13 +329,11 @@ export default function Dashboard() {
       loadFiles();
     } catch (error) {
       console.error("Error unsharing file:", error);
-      alert("Failed to remove sharing. Please try again.");
     }
   };
 
   const handleDeleteFile = async (fileId: string) => {
     const file = files.find((f) => f.id === fileId);
-    if (!confirm("Delete this file? This action cannot be undone.")) return;
 
     try {
       await deleteDoc(doc(db, "files", fileId));
@@ -525,6 +539,7 @@ export default function Dashboard() {
                   uploading={uploading}
                   theme={theme}
                   maxFileSize={userPlan?.type === "premium" ? 800 : 300}
+                  isPremium={userPlan?.type === "premium"}
                 />
                 <FilesList
                   files={files}
@@ -532,9 +547,8 @@ export default function Dashboard() {
                   theme={theme}
                   onShare={handleShareFile}
                   onDelete={handleDeleteFile}
-                  onCopyShareLink={(url) => {
-                    alert("Share link copied to clipboard!");
-                  }}
+                  onCopyShareLink={() => {}}
+                  isPremium={userPlan?.type === "premium"}
                 />
               </div>
             )}
@@ -547,9 +561,7 @@ export default function Dashboard() {
                   loading={loading}
                   theme={theme}
                   onUnshare={handleUnshareFile}
-                  onCopyShareLink={(url) => {
-                    alert("Share link copied to clipboard!");
-                  }}
+                  onCopyShareLink={() => {}}
                 />
               </div>
             )}

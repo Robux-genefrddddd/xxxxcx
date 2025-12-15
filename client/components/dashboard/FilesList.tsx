@@ -32,6 +32,7 @@ interface FilesListProps {
   onShare: (fileId: string) => void;
   onDelete: (fileId: string) => void;
   onCopyShareLink: (url: string) => void;
+  isPremium?: boolean;
 }
 
 const getFileIcon = (filename: string) => {
@@ -45,6 +46,7 @@ export function FilesList({
   onShare,
   onDelete,
   onCopyShareLink,
+  isPremium = false,
 }: FilesListProps) {
   const colors = getThemeColors(theme);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -53,10 +55,14 @@ export function FilesList({
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [deleteFileId, setDeleteFileId] = useState<string | null>(null);
   const [deleteFileName, setDeleteFileName] = useState("");
+  const [selectedFileIds, setSelectedFileIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [deleteConfirmBulk, setDeleteConfirmBulk] = useState(false);
 
   const handleDownload = async (file: FileItem) => {
     if (!file.storagePath) {
-      alert("File storage path not found. Please try again.");
+      console.error("File storage path not found for", file.name);
       return;
     }
 
@@ -110,9 +116,6 @@ export function FilesList({
       }, 100);
     } catch (error) {
       console.error("Error downloading file:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "Unknown error";
-      alert(`Failed to download file: ${errorMessage}`);
     } finally {
       setDownloadingId(null);
     }
@@ -125,6 +128,47 @@ export function FilesList({
       setTimeout(() => setCopiedId(null), 2000);
       onCopyShareLink(shareUrl);
     }
+  };
+
+  const toggleFileSelection = (fileId: string) => {
+    const newSelected = new Set(selectedFileIds);
+    if (newSelected.has(fileId)) {
+      newSelected.delete(fileId);
+    } else {
+      newSelected.add(fileId);
+    }
+    setSelectedFileIds(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedFileIds.size === files.length) {
+      setSelectedFileIds(new Set());
+    } else {
+      setSelectedFileIds(new Set(files.map((f) => f.id)));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    setDeletingId("bulk");
+    try {
+      const fileIdArray = Array.from(selectedFileIds);
+      for (const fileId of fileIdArray) {
+        await onDelete(fileId);
+      }
+    } catch (error) {
+      console.error("Error during bulk delete:", error);
+    } finally {
+      setSelectedFileIds(new Set());
+      setDeleteConfirmBulk(false);
+      setDeletingId(null);
+    }
+  };
+
+  const handleBulkShare = () => {
+    for (const fileId of selectedFileIds) {
+      onShare(fileId);
+    }
+    setSelectedFileIds(new Set());
   };
 
   return (
@@ -144,23 +188,63 @@ export function FilesList({
         }}
       >
         <div className="flex items-center justify-between">
-          <h2
-            className="text-sm font-semibold uppercase tracking-wider"
-            style={{ color: colors.text }}
-          >
-            Files
-            {files.length > 0 && (
-              <span
-                className="ml-3 px-2 py-1 rounded text-xs font-medium inline-block"
+          <div className="flex items-center gap-3">
+            {isPremium && files.length > 0 && (
+              <input
+                type="checkbox"
+                checked={
+                  selectedFileIds.size === files.length && files.length > 0
+                }
+                onChange={toggleSelectAll}
+                className="w-4 h-4 cursor-pointer rounded"
+                style={{
+                  accentColor: colors.primary,
+                }}
+              />
+            )}
+            <h2
+              className="text-sm font-semibold uppercase tracking-wider"
+              style={{ color: colors.text }}
+            >
+              Files
+              {files.length > 0 && (
+                <span
+                  className="ml-3 px-2 py-1 rounded text-xs font-medium inline-block"
+                  style={{
+                    backgroundColor: colors.accentLight,
+                    color: colors.primary,
+                  }}
+                >
+                  {files.length}
+                </span>
+              )}
+            </h2>
+          </div>
+
+          {isPremium && selectedFileIds.size > 0 && (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleBulkShare}
+                className="px-3 py-1.5 rounded text-xs font-medium transition-all"
                 style={{
                   backgroundColor: colors.accentLight,
                   color: colors.primary,
                 }}
               >
-                {files.length}
-              </span>
-            )}
-          </h2>
+                Share ({selectedFileIds.size})
+              </button>
+              <button
+                onClick={() => setDeleteConfirmBulk(true)}
+                className="px-3 py-1.5 rounded text-xs font-medium transition-all"
+                style={{
+                  backgroundColor: "rgba(239, 68, 68, 0.15)",
+                  color: "#EF4444",
+                }}
+              >
+                Delete ({selectedFileIds.size})
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -220,23 +304,41 @@ export function FilesList({
           <div className="divide-y" style={{ borderColor: colors.border }}>
             {files.map((file) => {
               const { icon: FileIcon, color } = getFileIcon(file.name);
+              const isSelected = selectedFileIds.has(file.id);
 
               return (
                 <div
                   key={file.id}
-                  className="px-6 py-3 flex items-center justify-between group hover:bg-opacity-50 transition-all duration-200 hover:scale-[1.02] origin-left cursor-pointer"
+                  className="px-6 py-3 flex items-center justify-between group hover:bg-opacity-50 transition-all duration-200 hover:scale-[1.02] origin-left"
                   style={{
-                    backgroundColor: colors.card,
+                    backgroundColor: isSelected
+                      ? colors.accentLight
+                      : colors.card,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = colors.sidebar;
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = colors.sidebar;
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = colors.card;
+                    e.currentTarget.style.backgroundColor = isSelected
+                      ? colors.accentLight
+                      : colors.card;
                   }}
                 >
-                  {/* File Icon & Name */}
+                  {/* Checkbox & File Icon & Name */}
                   <div className="flex-1 min-w-0 flex items-center gap-3">
+                    {isPremium && (
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleFileSelection(file.id)}
+                        className="w-4 h-4 cursor-pointer flex-shrink-0 rounded"
+                        style={{
+                          accentColor: colors.primary,
+                        }}
+                      />
+                    )}
                     <div
                       className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                       style={{
@@ -396,6 +498,20 @@ export function FilesList({
         isDangerous={true}
         theme={theme}
         loading={deletingId === deleteFileId}
+      />
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteConfirmBulk}
+        onClose={() => setDeleteConfirmBulk(false)}
+        onConfirm={handleBulkDelete}
+        title="Delete Files?"
+        description={`Are you sure you want to delete ${selectedFileIds.size} file(s)? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        isDangerous={true}
+        theme={theme}
+        loading={deletingId === "bulk"}
       />
     </div>
   );

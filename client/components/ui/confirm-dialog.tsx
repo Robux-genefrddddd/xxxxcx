@@ -42,95 +42,68 @@ export function ConfirmDialog({
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        backdropFilter: "blur(4px)",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+        backdropFilter: "blur(2px)",
       }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm rounded-xl border shadow-2xl animate-in zoom-in-95 slide-in-from-top-12 duration-300"
+        className="w-full max-w-xs animate-in zoom-in-95 duration-200"
         style={{
-          backgroundColor: colors.card,
-          borderColor: colors.border,
+          backgroundColor: "#111214",
+          border: "1px solid #1F2124",
+          borderRadius: "16px",
         }}
       >
         {/* Header */}
-        <div
-          className="flex items-start justify-between p-6 border-b"
-          style={{
-            borderColor: colors.border,
-          }}
-        >
-          <div className="flex items-start gap-4 flex-1">
-            <div
-              className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{
-                backgroundColor: iconBgColor,
-              }}
-            >
-              <Icon className="w-6 h-6" style={{ color: iconColor }} />
-            </div>
-            <div className="flex-1">
-              <h2 className="text-lg font-bold" style={{ color: colors.text }}>
-                {title}
-              </h2>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-lg hover:opacity-60 transition-opacity flex-shrink-0"
-            style={{
-              color: colors.textSecondary,
-            }}
+        <div className="px-5 py-4 border-b" style={{ borderColor: "#1F2124" }}>
+          <h2
+            className="text-sm font-semibold"
+            style={{ color: "#E5E7EB", letterSpacing: "-0.01em" }}
           >
-            <X className="w-5 h-5" />
-          </button>
+            {title}
+          </h2>
         </div>
 
         {/* Content */}
         {description && (
-          <div className="px-6 py-4">
-            <p
-              className="text-sm"
-              style={{
-                color: colors.textSecondary,
-              }}
-            >
+          <div className="px-5 py-3">
+            <p className="text-xs leading-relaxed" style={{ color: "#9CA3AF" }}>
               {description}
             </p>
           </div>
         )}
 
-        {/* Footer */}
+        {/* Actions */}
         <div
-          className="px-6 py-4 border-t space-y-3 flex flex-col-reverse"
-          style={{
-            borderColor: colors.border,
-          }}
+          className="px-5 py-3 flex gap-2 border-t"
+          style={{ borderColor: "#1F2124" }}
         >
-          <button
-            onClick={onConfirm}
-            disabled={loading}
-            className="w-full py-2.5 px-4 rounded-xl font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-90"
-            style={{
-              backgroundColor: confirmBgColor,
-              color: confirmTextColor,
-            }}
-          >
-            {loading ? "Processing..." : confirmText}
-          </button>
           <button
             onClick={onClose}
             disabled={loading}
-            className="w-full py-2.5 px-4 rounded-xl font-medium transition-all border disabled:opacity-50"
+            className="flex-1 py-2 px-3 text-xs font-medium transition-all disabled:opacity-50 hover:opacity-90"
             style={{
               backgroundColor: "transparent",
-              borderColor: colors.border,
-              color: colors.textSecondary,
+              color: "#D1D5DB",
+              border: "1px solid #374151",
+              borderRadius: "10px",
             }}
           >
             {cancelText}
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={loading}
+            className="flex-1 py-2 px-3 text-xs font-medium transition-all disabled:opacity-50 hover:opacity-90"
+            style={{
+              backgroundColor: isDangerous ? "#DC2626" : colors.primary,
+              color: "white",
+              borderRadius: "10px",
+            }}
+          >
+            {loading ? "..." : confirmText}
           </button>
         </div>
       </div>
