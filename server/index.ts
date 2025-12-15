@@ -91,6 +91,7 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+  app.post("/api/download", handleDownload);
 
   // Note: In development, Vite's dev server handles static files and SPA routing.
   // In production, node-build.ts handles static files and SPA fallback.
