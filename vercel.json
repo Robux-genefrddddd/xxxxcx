@@ -6,11 +6,6 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "serverlessFunctions": {
-    "api/**": {
-      "runtime": "nodejs20.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
