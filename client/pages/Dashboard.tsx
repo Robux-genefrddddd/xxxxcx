@@ -390,19 +390,30 @@ export default function Dashboard() {
   };
 
   // ============= USERS MANAGEMENT =============
-  const loadUsers = async () => {
-    try {
-      const docs = await getDocs(collection(db, "users"));
-      const userList: User[] = docs.docs.map((doc) => ({
-        id: doc.id,
-        name: doc.data().name,
-        email: doc.data().email,
-        role: doc.data().role || "user",
-      }));
-      setUsers(userList);
-    } catch (error) {
-      console.error("Error loading users:", error);
+  const setupUsersListener = () => {
+    // Unsubscribe from previous listener if exists
+    if (usersUnsubscribeRef.current) {
+      usersUnsubscribeRef.current();
     }
+
+    // Set up real-time listener
+    const unsubscribe = onSnapshot(
+      collection(db, "users"),
+      (snapshot) => {
+        const userList: User[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          email: doc.data().email,
+          role: doc.data().role || "user",
+        }));
+        setUsers(userList);
+      },
+      (error) => {
+        console.error("Error listening to users:", error);
+      },
+    );
+
+    usersUnsubscribeRef.current = unsubscribe;
   };
 
   const handleAddUser = async (
@@ -417,7 +428,6 @@ export default function Dashboard() {
         role,
         createdAt: new Date().toISOString(),
       });
-      loadUsers();
     } catch (error) {
       console.error("Error adding user:", error);
     }
@@ -427,7 +437,6 @@ export default function Dashboard() {
     if (!confirm("Delete this user? This action cannot be undone.")) return;
     try {
       await deleteDoc(doc(db, "users", userId));
-      loadUsers();
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -439,7 +448,6 @@ export default function Dashboard() {
   ) => {
     try {
       await updateDoc(doc(db, "users", userId), { role: newRole });
-      loadUsers();
     } catch (error) {
       console.error("Error updating user:", error);
     }
