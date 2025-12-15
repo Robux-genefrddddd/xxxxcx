@@ -136,58 +136,74 @@ export default function Dashboard() {
   }, [navigate]);
 
   // ============= FILES MANAGEMENT =============
-  const loadFiles = async () => {
-    setLoading(true);
-    try {
-      if (!auth.currentUser) return;
-      const q = query(
-        collection(db, "files"),
-        where("userId", "==", auth.currentUser.uid),
-      );
-      const docs = await getDocs(q);
-      const fileList: FileItem[] = docs.docs.map((doc) => ({
-        id: doc.id,
-        name: doc.data().name,
-        size: doc.data().size,
-        uploadedAt: new Date(doc.data().uploadedAt).toLocaleDateString(),
-        shared: doc.data().shared || false,
-        shareUrl: doc.data().shareUrl,
-        storagePath: doc.data().storagePath,
-      }));
-      setFiles(fileList);
+  const setupFilesListener = () => {
+    if (!auth.currentUser) return;
 
-      // Calculate storage used
-      let totalSize = 0;
-      fileList.forEach((file) => {
-        const sizeStr = file.size;
-        if (sizeStr.includes("MB")) {
-          totalSize += parseFloat(sizeStr) * 1024 * 1024;
-        } else if (sizeStr.includes("KB")) {
-          totalSize += parseFloat(sizeStr) * 1024;
-        }
-      });
-
-      // Update user plan storage used and persist to Firestore
-      if (userId) {
-        const updatedPlan = {
-          ...userPlan,
-          storageUsed: totalSize,
-        };
-        setUserPlan(updatedPlan);
-
-        // Persist storage to Firestore so it doesn't reset on reload
-        try {
-          const planRef = doc(db, "userPlans", userId);
-          await updateDoc(planRef, { storageUsed: totalSize });
-        } catch (error) {
-          console.error("Error updating storage in Firestore:", error);
-        }
-      }
-    } catch (error) {
-      console.error("Error loading files:", error);
-    } finally {
-      setLoading(false);
+    // Unsubscribe from previous listener if exists
+    if (filesUnsubscribeRef.current) {
+      filesUnsubscribeRef.current();
     }
+
+    setLoading(true);
+    const q = query(
+      collection(db, "files"),
+      where("userId", "==", auth.currentUser.uid),
+    );
+
+    // Set up real-time listener
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const fileList: FileItem[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          name: doc.data().name,
+          size: doc.data().size,
+          uploadedAt: new Date(doc.data().uploadedAt).toLocaleDateString(),
+          shared: doc.data().shared || false,
+          shareUrl: doc.data().shareUrl,
+          storagePath: doc.data().storagePath,
+        }));
+        setFiles(fileList);
+
+        // Calculate storage used
+        let totalSize = 0;
+        fileList.forEach((file) => {
+          const sizeStr = file.size;
+          if (sizeStr.includes("MB")) {
+            totalSize += parseFloat(sizeStr) * 1024 * 1024;
+          } else if (sizeStr.includes("KB")) {
+            totalSize += parseFloat(sizeStr) * 1024;
+          }
+        });
+
+        // Update user plan storage used and persist to Firestore
+        if (userId) {
+          const updatedPlan = {
+            ...userPlan,
+            storageUsed: totalSize,
+          };
+          setUserPlan(updatedPlan);
+
+          // Persist storage to Firestore so it doesn't reset on reload
+          try {
+            const planRef = doc(db, "userPlans", userId);
+            updateDoc(planRef, { storageUsed: totalSize }).catch((error) => {
+              console.error("Error updating storage in Firestore:", error);
+            });
+          } catch (error) {
+            console.error("Error updating storage in Firestore:", error);
+          }
+        }
+
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error listening to files:", error);
+        setLoading(false);
+      },
+    );
+
+    filesUnsubscribeRef.current = unsubscribe;
   };
 
   const handleFileUpload = async (filesToUpload: File[]) => {
