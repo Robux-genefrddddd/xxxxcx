@@ -79,55 +79,40 @@ export function ShareFileModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.7)",
-        backdropFilter: "blur(4px)",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+        backdropFilter: "blur(2px)",
       }}
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-2xl border overflow-hidden shadow-2xl"
+        className="w-full max-w-sm animate-in zoom-in-95 duration-200"
         style={{
-          backgroundColor: colors.card,
-          borderColor: colors.border,
+          backgroundColor: "#111214",
+          border: "1px solid #1F2124",
+          borderRadius: "16px",
         }}
       >
         {/* Header */}
         <div
-          className="flex items-center justify-between p-6 border-b"
+          className="px-5 py-4 border-b"
           style={{
-            borderColor: colors.border,
+            borderColor: "#1F2124",
           }}
         >
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: colors.accentLight }}
-            >
-              <Link2 className="w-5 h-5" style={{ color: colors.primary }} />
-            </div>
-            <div>
-              <h2 className="text-lg font-bold" style={{ color: colors.text }}>
-                {step === "options" ? "Share File" : "Link Ready"}
-              </h2>
-              <p className="text-xs" style={{ color: colors.textSecondary }}>
-                {fileName.length > 30
-                  ? fileName.substring(0, 27) + "..."
-                  : fileName}
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded hover:opacity-60 transition-opacity"
-            style={{
-              color: colors.textSecondary,
-            }}
+          <h2
+            className="text-sm font-semibold"
+            style={{ color: "#E5E7EB", letterSpacing: "-0.01em" }}
           >
-            <X className="w-5 h-5" />
-          </button>
+            {step === "options" ? "Share File" : "Share Link Ready"}
+          </h2>
+          <p className="text-xs mt-1" style={{ color: "#6B7280" }}>
+            {fileName.length > 35
+              ? fileName.substring(0, 32) + "..."
+              : fileName}
+          </p>
         </div>
 
         {/* Content */}
