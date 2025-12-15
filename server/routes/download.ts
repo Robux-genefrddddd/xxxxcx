@@ -13,7 +13,7 @@ function initializeFirebase() {
 
   if (!serviceAccountJson) {
     throw new Error(
-      "FIREBASE_SERVICE_ACCOUNT_KEY environment variable not set"
+      "FIREBASE_SERVICE_ACCOUNT_KEY environment variable not set",
     );
   }
 
@@ -76,8 +76,6 @@ export const handleDownload: RequestHandler = async (req, res) => {
       error instanceof Error ? error.message : "Unknown error";
     console.error("Error generating signed URL:", error);
 
-    return res
-      .status(500)
-      .json({ error: "Failed to generate signed URL" });
+    return res.status(500).json({ error: "Failed to generate signed URL" });
   }
 };

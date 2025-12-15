@@ -87,7 +87,7 @@ export function FilesList({
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(
-          errorData.error || `Download failed with status ${response.status}`
+          errorData.error || `Download failed with status ${response.status}`,
         );
       }
 
